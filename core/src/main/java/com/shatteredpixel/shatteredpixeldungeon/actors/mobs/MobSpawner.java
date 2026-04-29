@@ -75,18 +75,18 @@ public class MobSpawner extends Actor {
 			case 1: default:
 				//3x rat, 1x snake
 				return new ArrayList<>(Arrays.asList(
-						Rat.class, Rat.class, Rat.class,
+						Rat.class, Rat.class, Goblin.class,
 						Snake.class));
 			case 2:
 				//2x rat, 1x snake, 2x gnoll
 				return new ArrayList<>(Arrays.asList(Rat.class, Rat.class,
 						Snake.class,
-						Gnoll.class, Gnoll.class));
+						Goblin.class, Gnoll.class));
 			case 3:
 				//1x rat, 1x snake, 3x gnoll, 1x swarm, 1x crab
 				return new ArrayList<>(Arrays.asList(Rat.class,
 						Snake.class,
-						Gnoll.class, Gnoll.class, Gnoll.class,
+						Goblin.class, Gnoll.class, Gnoll.class,
 						Swarm.class,
 						Crab.class));
 			case 4: case 5:
