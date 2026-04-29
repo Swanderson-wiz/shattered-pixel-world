@@ -1,3 +1,9 @@
+# Shattered Pixel World
+
+A fork of [Shattered Pixel Dungeon](https://github.com/00-Evan/shattered-pixel-dungeon) aiming to convert the game into an RPG
+
+_Below is the original README of SPD_
+
 # Shattered Pixel Dungeon
 
 [Shattered Pixel Dungeon](https://shatteredpixel.com/shatteredpd/) is an open-source traditional roguelike dungeon crawler with randomized levels and enemies, and hundreds of items to collect and use. It's based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://watabou.itch.io/).
