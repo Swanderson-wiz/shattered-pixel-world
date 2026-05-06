@@ -340,5 +340,6 @@ public class Assets {
 
 		//New assets
 		public static final String GOBLIN			= "sprites/goblin.png";
+		public static final String GOBLIN_SHAMAN	= "sprites/goblin_shaman.png";
 	}
 }
