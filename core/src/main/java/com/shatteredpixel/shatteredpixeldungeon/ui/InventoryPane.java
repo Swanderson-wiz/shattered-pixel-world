@@ -152,6 +152,7 @@ public class InventoryPane extends Component {
 			}
 		};
 
+		// I believe this is what needs to be edited to add more armor/ weapon slots to the game
 		equipped = new ArrayList<>();
 		for (int i = 0; i < 5; i++){
 			InventorySlot btn = new InventoryPaneSlot(null);
