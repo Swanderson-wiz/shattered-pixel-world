@@ -196,9 +196,12 @@ public class Hero extends Char {
 		alignment = Alignment.ALLY;
 	}
 	
-	public static final int MAX_LEVEL = 30;
+	public static final int MAX_LEVEL = 100;
 
 	public static final int STARTING_STR = 10;
+	public static final int STARTING_DEX = 10;
+	public static final int STARTING_INT = 10;
+	public static final int STARTING_WIS = 10;
 	
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
@@ -226,6 +229,9 @@ public class Hero extends Char {
 	public Belongings belongings;
 	
 	public int STR;
+	public int DEX;
+	public int INTL;
+	public int WIS;
 	
 	public float awareness;
 	
@@ -245,6 +251,9 @@ public class Hero extends Char {
 
 		HP = HT = 20;
 		STR = STARTING_STR;
+		DEX = STARTING_DEX;
+		INTL = STARTING_INT;
+		WIS = STARTING_WIS;
 		
 		belongings = new Belongings( this );
 		
@@ -289,12 +298,15 @@ public class Hero extends Char {
 	private static final String SUBCLASS    = "subClass";
 	private static final String ABILITY     = "armorAbility";
 
-	private static final String ATTACK		= "attackSkill";
-	private static final String DEFENSE		= "defenseSkill";
-	private static final String STRENGTH	= "STR";
-	private static final String LEVEL		= "lvl";
-	private static final String EXPERIENCE	= "exp";
-	private static final String HTBOOST     = "htboost";
+	private static final String ATTACK		 = "attackSkill";
+	private static final String DEFENSE		 = "defenseSkill";
+	private static final String STRENGTH	 = "STR";
+	private static final String DEXTERITY  	 = "DEX";
+	private static final String INTELLIGENCE = "INT";
+	private static final String WISDOM 		 = "WIS";
+	private static final String LEVEL		 = "lvl";
+	private static final String EXPERIENCE	 = "exp";
+	private static final String HTBOOST      = "htboost";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -310,6 +322,9 @@ public class Hero extends Char {
 		bundle.put( DEFENSE, defenseSkill );
 		
 		bundle.put( STRENGTH, STR );
+		bundle.put( DEXTERITY, DEX );
+		bundle.put( INTELLIGENCE, INTL );
+		bundle.put( WISDOM, WIS );
 		
 		bundle.put( LEVEL, lvl );
 		bundle.put( EXPERIENCE, exp );
@@ -338,6 +353,9 @@ public class Hero extends Char {
 		defenseSkill = bundle.getInt( DEFENSE );
 		
 		STR = bundle.getInt( STRENGTH );
+		DEX = bundle.getInt( DEXTERITY );
+		INTL = bundle.getInt( INTELLIGENCE );
+		WIS = bundle.getInt( WISDOM );
 
 		belongings.restoreFromBundle( bundle );
 	}
@@ -345,6 +363,9 @@ public class Hero extends Char {
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
 		info.level = bundle.getInt( LEVEL );
 		info.str = bundle.getInt( STRENGTH );
+		info.dex = bundle.getInt( DEXTERITY );
+		info.intl = bundle.getInt( INTELLIGENCE );
+		info.wis = bundle.getInt( WISDOM );
 		info.exp = bundle.getInt( EXPERIENCE );
 		info.hp = bundle.getInt( Char.TAG_HP );
 		info.ht = bundle.getInt( Char.TAG_HT );
@@ -637,6 +658,7 @@ public class Hero extends Char {
 	public int drRoll() {
 		int dr = super.drRoll();
 
+		//Gonna need to make changes here to account for other stats
 		if (belongings.armor() != null) {
 			int armDr = Random.NormalIntRange( belongings.armor().DRMin(), belongings.armor().DRMax());
 			if (STR() < belongings.armor().STRReq()){
@@ -735,6 +757,7 @@ public class Hero extends Char {
 	}
 
 	@Override
+	//Will need to change this as well for other stats
 	public boolean canSurpriseAttack(){
 		KindOfWeapon w = belongings.attackingWeapon();
 		if (!(w instanceof Weapon))             return true;
@@ -755,6 +778,7 @@ public class Hero extends Char {
 			return true;
 		}
 
+		//This seems promising for adding in a secondary weapon
 		KindOfWeapon wep = Dungeon.hero.belongings.attackingWeapon();
 
 		if (wep != null){
@@ -1153,7 +1177,8 @@ public class Hero extends Char {
 			return false;
 		}
 	}
-	
+
+	// Probably need to change this to an inventory screen? Haven't looked enough to know how it's working
 	private boolean actOpenChest( HeroAction.OpenChest action ) {
 		int dst = action.dst;
 		if (Dungeon.level.adjacent( pos, dst ) || pos == dst) {
@@ -1273,6 +1298,8 @@ public class Hero extends Char {
 					public void call() {
 
 						boolean crystalAdjacent = false;
+
+						// Seems promising for implementing an herb quest
 						for (int i : PathFinder.NEIGHBOURS8) {
 							if (Dungeon.level.map[action.dst + i] == Terrain.MINE_CRYSTAL){
 								crystalAdjacent = true;
@@ -1963,7 +1990,8 @@ public class Hero extends Char {
 
 		return true;
 	}
-	
+
+	// This will need to be changed to avoid
 	public void earnExp( int exp, Class source ) {
 
 		//xp granted by ascension challenge is only for on-exp gain effects
