@@ -67,12 +67,13 @@ public class MagicMissile extends Emitter {
 	public static final int RAINBOW         = 8;
 	public static final int EARTH           = 9;
 	public static final int WARD            = 10;
-	public static final int SHAMAN_RED      = 11;
-	public static final int SHAMAN_BLUE     = 12;
-	public static final int SHAMAN_PURPLE   = 13;
-	public static final int ELMO            = 14;
-	public static final int POISON          = 15;
-	public static final int LIGHT_MISSILE   = 16;
+	public static final int BOLT_RED		= 11;
+	public static final int BOLT_BLUE 		= 12;
+	public static final int BOLT_PURPLE 	= 13;
+	public static final int BOLT_GREEN 		= 14;
+	public static final int ELMO            = 15;
+	public static final int POISON          = 16;
+	public static final int LIGHT_MISSILE   = 17;
 
 	public static final int MAGIC_MISS_CONE = 100;
 	public static final int FROST_CONE      = 101;
@@ -178,17 +179,21 @@ public class MagicMissile extends Emitter {
 				size( 4 );
 				pour( WardParticle.FACTORY, 0.01f );
 				break;
-			case SHAMAN_RED:
+			case BOLT_RED:
 				size( 2 );
-				pour( ShamanParticle.RED, 0.01f );
+				pour( BoltParticle.RED, 0.01f );
 				break;
-			case SHAMAN_BLUE:
+			case BOLT_BLUE:
 				size( 2 );
-				pour( ShamanParticle.BLUE, 0.01f );
+				pour( BoltParticle.BLUE, 0.01f );
 				break;
-			case SHAMAN_PURPLE:
+			case BOLT_PURPLE:
 				size( 2 );
-				pour( ShamanParticle.PURPLE, 0.01f );
+				pour( BoltParticle.PURPLE, 0.01f );
+				break;
+			case BOLT_GREEN:
+				size( 2 );
+				pour( BoltParticle.GREEN, 0.01f );
 				break;
 			case ELMO:
 				size( 5 );
@@ -432,12 +437,12 @@ public class MagicMissile extends Emitter {
 		}
 	}
 	
-	public static class ShamanParticle extends EarthParticle{
+	public static class BoltParticle extends EarthParticle{
 		
 		public static final Emitter.Factory RED = new Factory() {
 			@Override
 			public void emit( Emitter emitter, int index, float x, float y ) {
-				((ShamanParticle)emitter.recycle( ShamanParticle.class ))
+				((BoltParticle)emitter.recycle( BoltParticle.class ))
 						.reset( x, y, ColorMath.random(0xFF4D4D, 0x801A1A) );
 			}
 		};
@@ -445,7 +450,7 @@ public class MagicMissile extends Emitter {
 		public static final Emitter.Factory BLUE = new Factory() {
 			@Override
 			public void emit( Emitter emitter, int index, float x, float y ) {
-				((ShamanParticle)emitter.recycle( ShamanParticle.class ))
+				((BoltParticle)emitter.recycle( BoltParticle.class ))
 						.reset( x, y, ColorMath.random(0x6699FF, 0x1A3C80) );
 			}
 		};
@@ -453,15 +458,23 @@ public class MagicMissile extends Emitter {
 		public static final Emitter.Factory PURPLE = new Factory() {
 			@Override
 			public void emit( Emitter emitter, int index, float x, float y ) {
-				((ShamanParticle)emitter.recycle( ShamanParticle.class ))
+				((BoltParticle)emitter.recycle( BoltParticle.class ))
 						.reset( x, y, ColorMath.random(0xBB33FF, 0x5E1A80) );
+			}
+		};
+
+		public static final Emitter.Factory GREEN = new Factory() {
+			@Override
+			public void emit(Emitter emitter, int index, float x, float y) {
+				((BoltParticle)emitter.recycle( BoltParticle.class ))
+						.reset( x, y, ColorMath.random(0x53F902, 0x36A001) );
 			}
 		};
 		
 		int startColor;
 		int endColor;
 		
-		public ShamanParticle() {
+		public BoltParticle() {
 			super();
 			
 			lifespan = 0.6f;

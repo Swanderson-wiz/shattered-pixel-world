@@ -87,7 +87,7 @@ public abstract class ShamanSprite extends MobSprite {
 	
 	public static class Red extends ShamanSprite {
 		{
-			boltType = MagicMissile.SHAMAN_RED;
+			boltType = MagicMissile.BOLT_RED;
 		}
 		
 		@Override
@@ -98,7 +98,7 @@ public abstract class ShamanSprite extends MobSprite {
 	
 	public static class Blue extends ShamanSprite {
 		{
-			boltType = MagicMissile.SHAMAN_BLUE;
+			boltType = MagicMissile.BOLT_BLUE;
 		}
 		
 		@Override
@@ -109,7 +109,7 @@ public abstract class ShamanSprite extends MobSprite {
 	
 	public static class Purple extends ShamanSprite {
 		{
-			boltType = MagicMissile.SHAMAN_PURPLE;
+			boltType = MagicMissile.BOLT_PURPLE;
 		}
 		
 		@Override

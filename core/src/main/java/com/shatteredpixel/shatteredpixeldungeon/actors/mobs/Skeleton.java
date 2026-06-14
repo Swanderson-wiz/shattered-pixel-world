@@ -45,7 +45,10 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Skeleton extends Mob {
-	
+
+	public static final int MIN_EXPLODE = 6;
+	public static final int MAX_EXPLODE = 12;
+
 	{
 		spriteClass = SkeletonSprite.class;
 		
@@ -62,23 +65,25 @@ public class Skeleton extends Mob {
 		properties.add(Property.INORGANIC);
 	}
 	
+	//@Override
+	//public int damageRoll() { return Random.NormalIntRange( 2, 10 ); }
+
 	@Override
-	public int damageRoll() {
-		return Random.NormalIntRange( 2, 10 );
+	public void die( Object cause ){
+		die( cause, Skeleton.MIN_EXPLODE, Skeleton.MAX_EXPLODE );
 	}
-	
-	@Override
-	public void die( Object cause ) {
-		
+
+
+	public void die( Object cause, int min_damage, int max_damage) {
 		super.die( cause );
 		
 		if (cause == Chasm.class) return;
-		
+
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
 			Char ch = findChar( pos + PathFinder.NEIGHBOURS8[i] );
 			if (ch != null && ch.isAlive()) {
-				int damage = Math.round(Random.NormalIntRange(6, 12));
+				int damage = Math.round(Random.NormalIntRange(min_damage, max_damage));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
 
 				//all sources of DR are 2x effective vs. bone explosion

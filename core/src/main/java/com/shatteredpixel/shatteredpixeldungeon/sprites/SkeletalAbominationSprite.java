@@ -10,7 +10,7 @@ public class SkeletalAbominationSprite extends MobSprite{
     public SkeletalAbominationSprite() {
         super();
 
-        texture( Assets.Sprites.SKELETAL_ABOMINATION );
+        texture( Assets.Sprites.SKELE_ABOMINATION);
 
         TextureFilm frames = new TextureFilm( texture, 21, 29 );
 
