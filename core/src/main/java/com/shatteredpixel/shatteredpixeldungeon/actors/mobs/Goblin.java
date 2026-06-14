@@ -27,7 +27,7 @@ public class Goblin extends Mob {
 
     @Override
     public int attackSkill( Char target ) {
-        return 8;
+        return 6;
     }
 
     @Override

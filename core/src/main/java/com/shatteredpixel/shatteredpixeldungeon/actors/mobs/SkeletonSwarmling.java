@@ -11,7 +11,7 @@ public class SkeletonSwarmling extends Skeleton {
     {
         spriteClass = SkeletonSwarmlingSprite.class;
 
-        HP = HT = 10;
+        HP = HT = 5;
         defenseSkill = 2;
 
         EXP = 1;
@@ -21,7 +21,7 @@ public class SkeletonSwarmling extends Skeleton {
     }
 
     @Override
-    public int damageRoll() { return Random.NormalIntRange( 2, 10 ); }
+    public int damageRoll() { return Random.NormalIntRange( 2, 5 ); }
 
     @Override
     public void die( Object cause ) {
