@@ -1,15 +1,22 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Lich;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shaman;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.utils.Callback;
 
 
 public abstract class LichSprite extends MobSprite {
 
     protected Animation charging;
-    protected Emitter summoningParticles;
     protected Emitter summoningBones;
     protected abstract int texOffset();
     protected int boltType;
@@ -34,12 +41,102 @@ public abstract class LichSprite extends MobSprite {
         zap = attack.clone();
 
         charging = new Animation( 5, true );
-        charging.frames( frames, c+7, c+8 );
+        charging.frames( frames, c+8, c+9 );
 
         die = new Animation( 10, false );
-        die.frames( frames, c+9, c+10, c+11, c+12 );
+        die.frames( frames, c+10, c+11, c+12, c+13 );
 
         play( idle );
+    }
+
+    @Override
+    public void link(Char ch) {
+        super.link(ch);
+        if (ch instanceof Lich && ((Lich) ch).summoning){
+            zap(((Lich) ch).summoningPos);
+        }
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (summoningBones != null && ((Lich) ch).summoningPos != -1){
+            summoningBones.visible = Dungeon.level.heroFOV[((Lich) ch).summoningPos];
+        }
+    }
+
+    @Override
+    public void die() {
+        super.die();
+        if (summoningBones != null){
+            summoningBones.on = false;
+            summoningBones = null;
+        }
+    }
+
+    @Override
+    public void kill() {
+        super.kill();
+        if (summoningBones != null){
+            summoningBones.on = false;
+            summoningBones = null;
+        }
+    }
+
+    public void cancelSummoning(){
+        if (summoningBones != null){
+            summoningBones.on = false;
+            summoningBones = null;
+        }
+    }
+
+    public void finishSummoning(){
+        if (summoningBones != null) {
+            if (summoningBones.visible) {
+                Sample.INSTANCE.play(Assets.Sounds.BONES);
+                summoningBones.burst(Speck.factory(Speck.RATTLE), 5);
+            } else {
+                summoningBones.on = false;
+            }
+            summoningBones = null;
+        }
+        idle();
+    }
+
+    public void charge(){
+        play(charging);
+    }
+
+
+    @Override
+    public void zap(int cell) {
+        super.zap(cell);
+        if (ch instanceof Lich && ((Lich) ch).summoning){
+            if (summoningBones != null){
+                summoningBones.on = false;
+            }
+            summoningBones = CellEmitter.get(((Lich) ch).summoningPos);
+            summoningBones.pour(Speck.factory(Speck.RATTLE), 0.2f);
+            summoningBones.visible = Dungeon.level.heroFOV[((Lich) ch).summoningPos];
+            if (visible || summoningBones.visible ) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP, 1f, 0.8f );
+        }
+    }
+
+    @Override
+    public void onComplete(Animation anim) {
+        super.onComplete(anim);
+        if (anim == zap){
+            if (ch instanceof Lich){
+                if (((Lich) ch).summoning){
+                    charge();
+                } else {
+                    ((Lich)ch).onZapComplete();
+                    idle();
+                }
+            } else {
+                idle();
+            }
+        }
     }
 
     public static class Green extends LichSprite {

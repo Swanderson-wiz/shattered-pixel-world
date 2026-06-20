@@ -5,7 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 
-public class SkeletonSwarmlingSprite extends MobSprite {
+public class SkeletonSwarmlingSprite extends SkeletonSprite {
 
     public SkeletonSwarmlingSprite() {
         super();
@@ -35,11 +35,6 @@ public class SkeletonSwarmlingSprite extends MobSprite {
         if (Dungeon.level.heroFOV[ch.pos]) {
             emitter().burst( Speck.factory( Speck.BONE ), 2 );
         }
-    }
-
-    @Override
-    public int blood() {
-        return 0xFFcccccc;
     }
 
 }

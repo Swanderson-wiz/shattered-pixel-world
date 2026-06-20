@@ -5,7 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 
-public class SkeletalAbominationSprite extends MobSprite{
+public class SkeletalAbominationSprite extends SkeletonSprite{
 
     public SkeletalAbominationSprite() {
         super();
@@ -36,6 +36,4 @@ public class SkeletalAbominationSprite extends MobSprite{
             emitter().burst( Speck.factory( Speck.BONE ), 8 );
         }
     }
-    @Override
-    public int blood() { return 0xFFcccccc; }
 }
