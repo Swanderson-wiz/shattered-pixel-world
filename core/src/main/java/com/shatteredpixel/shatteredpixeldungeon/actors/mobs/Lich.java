@@ -49,7 +49,7 @@ public abstract class Lich extends Mob{
     private final ArrayList<LichSkeleton> mySkeletons = new ArrayList<>();
     private final ArrayList<Integer> storedSkeletonIDs = new ArrayList<>();
     private final int BLUE_LIMIT = 2;
-    private final int PURPLE_LIMIT = 5;
+    private final int PURPLE_LIMIT = 4;
 
 
     @Override
@@ -156,8 +156,8 @@ public abstract class Lich extends Mob{
         for (LichSkeleton skeleton : mySkeletons){
             if (skeleton != null) {
                 skeletonIDArr[i] = skeleton.id();
+                i++;
             }
-            i++;
         }
         bundle.put(STORED_SKELETON_IDS, skeletonIDArr);
     }
@@ -222,6 +222,10 @@ public abstract class Lich extends Mob{
 
 
     public void summonMinion(){
+        mySkeletons.removeIf(skeletons -> skeletons == null
+                || !skeletons.isAlive()
+                || !Dungeon.level.mobs.contains(skeletons)
+                || skeletons.alignment != alignment);
         if (Actor.findChar(summoningPos) != null || !Dungeon.level.passable[summoningPos]) {
             int pushPos = pos;
             for (int c : PathFinder.NEIGHBOURS8) {
@@ -268,14 +272,14 @@ public abstract class Lich extends Mob{
         summoning = firstSummon = false;
 
 
-        if (mySkeletons.size() <= BLUE_LIMIT && isBlue()) {
+        if (mySkeletons.size() < BLUE_LIMIT && isBlue()) {
             currSkeleton = new LichSkeleton();
             createMinion();
         } else if ((mySkeletons.isEmpty() || currSkeleton == null || !currSkeleton.isActive())
                 && isGreen()) {
             currSkeleton = new LichAbomination();
             createMinion();
-        } else if (mySkeletons.size() <= PURPLE_LIMIT && isPurple()) {
+        } else if (mySkeletons.size() < PURPLE_LIMIT && isPurple()) {
             currSkeleton = new LichSwarmling();
             createMinion();
         } else {
@@ -290,8 +294,6 @@ public abstract class Lich extends Mob{
         GameScene.add(currSkeleton);
         Dungeon.level.occupyCell(currSkeleton);
         mySkeletons.add ( currSkeleton );
-        storedSkeletonIDs.add( currSkeleton.id() );
-
 
         for (Buff b : buffs()){
             if (b.revivePersists) {
@@ -360,8 +362,8 @@ public abstract class Lich extends Mob{
             if (enemySeen
                     && Dungeon.level.distance(pos, enemy.pos) <= 4
                     && ((mySkeletons.isEmpty() && isGreen())
-                    || (mySkeletons.size() <= BLUE_LIMIT && isBlue())
-                    || (mySkeletons.size() <= PURPLE_LIMIT && isPurple()))){
+                    || (mySkeletons.size() < BLUE_LIMIT && isBlue())
+                    || (mySkeletons.size() < PURPLE_LIMIT && isPurple()))) {
 
                 summoningPos = -1;
 
@@ -406,9 +408,9 @@ public abstract class Lich extends Mob{
                 spend(TICK);
 
                 boolean teleporting = false;
-                //teleport our skeleton to the enemy if..
+                //teleport our skeleton to the enemy if...
                 //we can't see it
-                if (!fieldOfView[currSkeleton.pos]){
+                if (!fieldOfView[currSkeleton.pos] ){
                     teleporting = true;
 
                     //it has a relatively long path to reach the hero (e.g. it's blocked in a tunnelway)
@@ -486,7 +488,7 @@ public abstract class Lich extends Mob{
 
             //20/25 health to start
             HT = 65;
-            HP = 50;
+            HP = 1;//50;
         }
 
         //When we're done testing, this will boost the skeleton's damage
@@ -497,6 +499,7 @@ public abstract class Lich extends Mob{
         public float spawningWeight() {
             return 0;
         }
+
 
         public static class LichSkeletonSprite extends SkeletonSprite{
 
@@ -525,7 +528,7 @@ public abstract class Lich extends Mob{
 
             //20/25 health to start
             HT = 120;
-            HP = 100;
+            HP = 1;//100;
 
             properties.add(Property.LARGE);
         }
@@ -566,7 +569,7 @@ public abstract class Lich extends Mob{
             //no loot or exp
             maxLvl = -5;
 
-            HP = HT = 20;
+            HP = HT = 1;//20;
         }
 
         //When we're done testing, this will boost the swarmling's damage

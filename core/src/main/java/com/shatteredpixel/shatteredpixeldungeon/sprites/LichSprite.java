@@ -24,7 +24,7 @@ public abstract class LichSprite extends MobSprite {
     public LichSprite() {
         super();
 
-        int c= texOffset();
+        int c = texOffset();
 
         texture( Assets.Sprites.LICH );
         TextureFilm frames = new TextureFilm( texture, 16, 16 );
