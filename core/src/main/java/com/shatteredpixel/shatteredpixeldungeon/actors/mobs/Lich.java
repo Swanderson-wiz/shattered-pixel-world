@@ -51,6 +51,10 @@ public abstract class Lich extends Mob{
     private final int BLUE_LIMIT = 2;
     private final int PURPLE_LIMIT = 4;
 
+    @Override
+    public int attackSkill( Char target ) {
+        return 18;
+    }
 
     @Override
     protected boolean act() {
@@ -106,29 +110,55 @@ public abstract class Lich extends Mob{
     protected abstract void debuff( Char enemy );
 
     private void zap() {
-        spend( 1f );
-
-        Invisibility.dispel(this);
-        Char enemy = this.enemy;
-        if (hit( this, enemy, true )) {
-
-            if (Random.Int( 2 ) == 0) {
-                debuff( enemy );
-                if (enemy == Dungeon.hero) Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
+        if( weakestExists()) {
+            currSkeleton = findWeakest();
+            if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()) {
+                return;
             }
+            //heal skeleton first, unless it's a swarmling
+            if (currSkeleton.HP < currSkeleton.HT && !(currSkeleton instanceof LichSwarmling)) {
+                if (sprite.visible || currSkeleton.sprite.visible) {
+                    sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
+                    Sample.INSTANCE.play(Assets.Sounds.RAY);
+                }
 
-            int dmg = Random.NormalIntRange( 0,1);
-                    //6, 15 );
-            dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-            enemy.damage( dmg, new Lich.EarthenBolt() );
+                currSkeleton.HP = Math.min(currSkeleton.HP + currSkeleton.HT / 5, currSkeleton.HT);
+                if (currSkeleton.sprite.visible) {
+                    currSkeleton.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(currSkeleton.HT / 5), FloatingText.HEALING);
+                }
+                //otherwise give it adrenaline
+            } else {
+                if (sprite.visible || currSkeleton.sprite.visible) {
+                    sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
+                    Sample.INSTANCE.play(Assets.Sounds.RAY);
+                }
+                Buff.affect(currSkeleton, Adrenaline.class, 3f);
 
-            if (!enemy.isAlive() && enemy == Dungeon.hero) {
-                Badges.validateDeathFromEnemyMagic();
-                Dungeon.fail( this );
-                GLog.n( Messages.get(this, "bolt_kill") );
+
             }
         } else {
-            enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+            Invisibility.dispel(this);
+            Char enemy = this.enemy;
+            if (hit(this, enemy, true)) {
+
+                if (Random.Int(2) == 0) {
+                    debuff(enemy);
+                    if (enemy == Dungeon.hero) Sample.INSTANCE.play(Assets.Sounds.DEBUFF);
+                }
+
+                int dmg = Random.NormalIntRange(1, 2);
+                //6, 15 );
+                dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+                enemy.damage(dmg, new Lich.EarthenBolt());
+
+                if (!enemy.isAlive() && enemy == Dungeon.hero) {
+                    Badges.validateDeathFromEnemyMagic();
+                    Dungeon.fail(this);
+                    GLog.n(Messages.get(this, "bolt_kill"));
+                }
+            } else {
+                enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+            }
         }
     }
 
@@ -184,31 +214,7 @@ public abstract class Lich extends Mob{
 
 
     public void onZapComplete(){
-        currSkeleton = findWeakest();
-        if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()){
-            return;
-        }
-        //heal skeleton first, unless it's a swarmling
-        if (currSkeleton.HP < currSkeleton.HT && !(currSkeleton instanceof LichSwarmling)) {
-            if (sprite.visible || currSkeleton.sprite.visible) {
-                sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
-                Sample.INSTANCE.play(Assets.Sounds.RAY);
-            }
-
-            currSkeleton.HP = Math.min(currSkeleton.HP + currSkeleton.HT / 5, currSkeleton.HT);
-            if (currSkeleton.sprite.visible) {
-                currSkeleton.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(currSkeleton.HT / 5), FloatingText.HEALING);
-            }
-            //otherwise give it adrenaline
-        } else {
-            if (sprite.visible || currSkeleton.sprite.visible) {
-                sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
-                Sample.INSTANCE.play(Assets.Sounds.RAY);
-            }
-            Buff.affect(currSkeleton, Adrenaline.class, 3f);
-
-
-        }
+        zap();
         next();
     }
 
@@ -453,7 +459,14 @@ public abstract class Lich extends Mob{
                             sprite.zap(currSkeleton.pos);
                             return false;
                         } else {
-                            onZapComplete();
+                            zap();
+                        }
+                    } else {
+                        if (sprite != null && sprite.visible){
+                            sprite.zap(enemy.pos);
+                            return false;
+                        } else {
+                            zap();
                         }
                     }
 

@@ -119,6 +119,18 @@ public abstract class LichSprite extends MobSprite {
             summoningBones.pour(Speck.factory(Speck.RATTLE), 0.2f);
             summoningBones.visible = Dungeon.level.heroFOV[((Lich) ch).summoningPos];
             if (visible || summoningBones.visible ) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP, 1f, 0.8f );
+        } else if (ch instanceof Lich && !((Lich) ch).weakestExists()) {
+            MagicMissile.boltFromChar( parent,
+                    boltType,
+                    this,
+                    cell,
+                    new Callback() {
+                        @Override
+                        public void call() {
+                            ((Lich)ch).onZapComplete();
+                        }
+                    } );
+            Sample.INSTANCE.play( Assets.Sounds.ZAP );
         }
     }
 
