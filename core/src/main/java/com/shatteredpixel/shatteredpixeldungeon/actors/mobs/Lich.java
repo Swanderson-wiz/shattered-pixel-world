@@ -184,17 +184,12 @@ public abstract class Lich extends Mob{
 
 
     public void onZapComplete(){
-        for (LichSkeleton skeleton : mySkeletons) {
-            if (currSkeleton == null || skeleton.HP < currSkeleton.HP) {
-                currSkeleton = skeleton;
-            }
-        }
+        currSkeleton = findWeakest();
         if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()){
             return;
         }
         //heal skeleton first, unless it's a swarmling
         if (currSkeleton.HP < currSkeleton.HT && !(currSkeleton instanceof LichSwarmling)) {
-
             if (sprite.visible || currSkeleton.sprite.visible) {
                 sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
                 Sample.INSTANCE.play(Assets.Sounds.RAY);
@@ -206,16 +201,13 @@ public abstract class Lich extends Mob{
             }
             //otherwise give it adrenaline
         } else {
-            for (LichSkeleton skeleton : mySkeletons) {
-                if (skeleton.buff(Adrenaline.class) == null) {
-                    if (sprite.visible || skeleton.sprite.visible) {
-                        sprite.parent.add(new Beam.HealthRay(sprite.center(), skeleton.sprite.center()));
-                        Sample.INSTANCE.play(Assets.Sounds.RAY);
-                    }
-                    Buff.affect(skeleton, Adrenaline.class, 3f);
-                    break;
-                }
+            if (sprite.visible || currSkeleton.sprite.visible) {
+                sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
+                Sample.INSTANCE.play(Assets.Sounds.RAY);
             }
+            Buff.affect(currSkeleton, Adrenaline.class, 3f);
+
+
         }
         next();
     }
@@ -376,7 +368,7 @@ public abstract class Lich extends Mob{
                     if (Actor.findChar(enemy.pos+c) == null
                             && PathFinder.distance[enemy.pos+c] != Integer.MAX_VALUE
                             && Dungeon.level.passable[enemy.pos+c]
-                            && (!hasProp(Lich.this, Property.LARGE) || Dungeon.level.openSpace[enemy.pos+c])
+                            && (!hasProp(Lich.this, Property.LARGE) && !isGreen() || Dungeon.level.openSpace[enemy.pos+c])
                             && fieldOfView[enemy.pos+c]
                             && Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, summoningPos)){
                         summoningPos = enemy.pos+c;
@@ -456,7 +448,7 @@ public abstract class Lich extends Mob{
                 } else {
 
                     //zap skeleton
-                    if (currSkeleton.HP < currSkeleton.HT || currSkeleton.buff(Adrenaline.class) == null) {
+                    if (weakestExists()) {
                         if (sprite != null && sprite.visible){
                             sprite.zap(currSkeleton.pos);
                             return false;
@@ -631,6 +623,40 @@ public abstract class Lich extends Mob{
 
     private boolean isPurple() {
         return spriteClass == LichSprite.Purple.class;
+    }
+
+    private LichSkeleton findWeakest() {
+        LichSkeleton tempSkeleton = currSkeleton;
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (tempSkeleton == null || skeleton.HP < tempSkeleton.HP) {
+                tempSkeleton = skeleton;
+            }
+        }
+        if (!(tempSkeleton.HP == tempSkeleton.HT)) {
+            return tempSkeleton;
+        } else {
+            for (LichSkeleton skeleton : mySkeletons) {
+                if (skeleton.buff(Adrenaline.class) == null) {
+                    return skeleton;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean weakestExists() {
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (skeleton.HP < skeleton.HT) {
+                return true;
+            }
+        }
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (skeleton.buff(Adrenaline.class) == null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static Class<? extends Lich> random(){
