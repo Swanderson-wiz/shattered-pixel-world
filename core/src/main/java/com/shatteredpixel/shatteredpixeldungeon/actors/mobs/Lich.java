@@ -406,6 +406,7 @@ public abstract class Lich extends Mob{
                 return true;
                 //otherwise, if enemy is seen, and we have a skeleton...
             } else if (enemySeen
+                    && currSkeleton != null
                     && ((!mySkeletons.isEmpty() && isGreen())
                     || (mySkeletons.size() >= BLUE_LIMIT && isBlue())
                     || (mySkeletons.size() >= PURPLE_LIMIT && isPurple()))){
@@ -452,6 +453,22 @@ public abstract class Lich extends Mob{
                                     Dungeon.hero.interrupt();
                                 }
                                 spend(TICK); //2 ticks total, it can't be the first summon
+                            }
+                        } else {
+                            if (weakestExists()) {
+                                if (sprite != null && sprite.visible){
+                                    sprite.zap(currSkeleton.pos);
+                                    return false;
+                                } else {
+                                    zap();
+                                }
+                            } else {
+                                if (sprite != null && sprite.visible){
+                                    sprite.zap(enemy.pos);
+                                    return false;
+                                } else {
+                                    zap();
+                                }
                             }
                         }
                     }
