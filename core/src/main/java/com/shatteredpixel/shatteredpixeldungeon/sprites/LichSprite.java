@@ -141,8 +141,10 @@ public abstract class LichSprite extends MobSprite {
             if (ch instanceof Lich){
                 if (((Lich) ch).summoning){
                     charge();
-                } else {
+                } else if (((Lich) ch).weakestExists()) {
                     ((Lich)ch).onZapComplete();
+                    idle();
+                } else {
                     idle();
                 }
             } else {

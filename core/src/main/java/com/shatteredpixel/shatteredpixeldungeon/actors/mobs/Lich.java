@@ -52,9 +52,7 @@ public abstract class Lich extends Mob{
     private final int PURPLE_LIMIT = 4;
 
     @Override
-    public int attackSkill( Char target ) {
-        return 18;
-    }
+    public int attackSkill( Char target ) {return 36;}
 
     @Override
     protected boolean act() {
@@ -110,9 +108,10 @@ public abstract class Lich extends Mob{
     protected abstract void debuff( Char enemy );
 
     private void zap() {
-        if( weakestExists()) {
+        if(weakestExists()) {
             currSkeleton = findWeakest();
             if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()) {
+                spend(TICK);
                 return;
             }
             //heal skeleton first, unless it's a swarmling
@@ -146,8 +145,7 @@ public abstract class Lich extends Mob{
                     if (enemy == Dungeon.hero) Sample.INSTANCE.play(Assets.Sounds.DEBUFF);
                 }
 
-                int dmg = Random.NormalIntRange(1, 2);
-                //6, 15 );
+                int dmg = Random.NormalIntRange(1, 2);//25, 30 );
                 dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
                 enemy.damage(dmg, new Lich.EarthenBolt());
 
@@ -330,7 +328,10 @@ public abstract class Lich extends Mob{
                 }
                 storedSkeletonIDs.clear();
             }
-
+            mySkeletons.removeIf(skeletons -> skeletons == null
+                    || !skeletons.isAlive()
+                    || !Dungeon.level.mobs.contains(skeletons)
+                    || skeletons.alignment != alignment);
 
             if (summoning){
                 summonMinion();
@@ -392,8 +393,14 @@ public abstract class Lich extends Mob{
 
                     spend( firstSummon ? TICK : 2*TICK );
                 } else {
-                    //wait for a turn
                     spend(TICK);
+                    if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
+                        sprite.zap(enemy.pos);
+                        return false; // Yield to animation callback
+                    } else {
+                        zap();
+                        return true;
+                    }
                 }
 
                 return true;
