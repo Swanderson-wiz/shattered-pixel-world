@@ -343,7 +343,8 @@ public class Assets {
 		public static final String GOBLIN_SHAMAN	= "sprites/goblin_shaman.png";
 		public static final String ELDRITCH_KNIGHT  = "sprites/eldritch_knight.png";
 		public static final String LICH 			= "sprites/lich.png";
-		public static final String SKELE_SWARMLING = "sprites/skeleton_swarmling.png";
+		public static final String PHYLACTERY 		= "sprites/phylactery.png";
+		public static final String SKELE_SWARMLING  = "sprites/skeleton_swarmling.png";
 		public static final String SKELE_ABOMINATION= "sprites/skeletal_abomination.png";
 	}
 }

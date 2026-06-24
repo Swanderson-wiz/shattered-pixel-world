@@ -25,14 +25,13 @@ import java.util.ArrayList;
 
 public abstract class Lich extends Mob{
 
+
     {
-        HP = HT = 1;
-            //120;
+        HP = HT = 1;//120;
         defenseSkill = 14;
 
         EXP = 14;
-        maxLvl = 5;
-            //30;
+        maxLvl = 5;//30;
 
         properties.add(Property.UNDEAD);
 
