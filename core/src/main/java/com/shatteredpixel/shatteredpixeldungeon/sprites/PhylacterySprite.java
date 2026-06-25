@@ -16,7 +16,7 @@ public abstract class PhylacterySprite extends MobSprite {
         texture(Assets.Sprites.PHYLACTERY);
         TextureFilm frames = new TextureFilm( texture, 10, 16);
 
-        idle = new Animation( 1, true );
+        idle = new Animation( 5, true );
         idle.frames( frames, 0+c, 1+c, 2+c, 3+c, 4+c );
 
         charging = new Animation( 1, false );

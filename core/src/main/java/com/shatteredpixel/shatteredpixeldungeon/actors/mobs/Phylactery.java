@@ -19,6 +19,8 @@ public abstract class Phylactery extends Mob {
         properties.add(Property.INORGANIC);
         properties.add(Property.STATIC);
         properties.add(Property.IMMOVABLE);
+
+        state = PASSIVE;
     }
 
     public boolean summoning = false;
@@ -39,7 +41,8 @@ public abstract class Phylactery extends Mob {
         super.aggro(ch);
         if (myLich != null && myLich.isAlive()
                 && Dungeon.level.mobs.contains(myLich)
-                && myLich.alignment == alignment){
+                && myLich.alignment == alignment
+                && !firstSummon){
             myLich.aggro(ch);
         }
     }
@@ -79,12 +82,21 @@ public abstract class Phylactery extends Mob {
     
     @Override
     protected boolean act() {
+        //char logic
+        if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
+            fieldOfView = new boolean[Dungeon.level.length()];
+        }
+        Dungeon.level.updateFieldOfView( this, fieldOfView );
+
         throwItems();
 
-        sprite.hideAlert();
-        sprite.hideLost();
-        sprite.hideSleep();
+        sprite.hideEmo();
 
+        //mob logic
+        enemy = chooseEnemy();
+
+        enemySeen = enemy != null && enemy.isAlive() && fieldOfView[enemy.pos] && enemy.invisible <= 0;
+        //end of char/mob logic
 
         if (storedLichID != -1){
             Actor ch = Actor.findById(storedLichID);
@@ -137,22 +149,19 @@ public abstract class Phylactery extends Mob {
 
 
         if (summoningPos != -1) {
-
-            summoning = firstSummon = false;
-
             if (myLich == null || !myLich.isActive()) {
                 myLich = lichColor();
                 myLich.pos = summoningPos;
                 GameScene.add(myLich);
-                Actor.add(new Pushing(myLich, pos, myLich.pos));
                 Dungeon.level.occupyCell(myLich);
-
+                //myLich.state = WANDERING;
                 for (Buff b : buffs()) {
                     if (b.revivePersists) {
                         Buff.affect(myLich, b.getClass());
                     }
                 }
             }
+            summoning = firstSummon = false;
         }
     }
 
