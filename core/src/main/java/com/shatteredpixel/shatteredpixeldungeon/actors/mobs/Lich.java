@@ -25,14 +25,13 @@ import java.util.ArrayList;
 
 public abstract class Lich extends Mob{
 
+
     {
-        HP = HT = 1;
-            //120;
+        HP = HT = 1;//120;
         defenseSkill = 14;
 
         EXP = 14;
-        maxLvl = 5;
-            //30;
+        maxLvl = 5;//30;
 
         properties.add(Property.UNDEAD);
 
@@ -49,8 +48,10 @@ public abstract class Lich extends Mob{
     private final ArrayList<LichSkeleton> mySkeletons = new ArrayList<>();
     private final ArrayList<Integer> storedSkeletonIDs = new ArrayList<>();
     private final int BLUE_LIMIT = 2;
-    private final int PURPLE_LIMIT = 5;
+    private final int PURPLE_LIMIT = 4;
 
+    @Override
+    public int attackSkill( Char target ) {return 36;}
 
     @Override
     protected boolean act() {
@@ -106,29 +107,55 @@ public abstract class Lich extends Mob{
     protected abstract void debuff( Char enemy );
 
     private void zap() {
-        spend( 1f );
-
-        Invisibility.dispel(this);
-        Char enemy = this.enemy;
-        if (hit( this, enemy, true )) {
-
-            if (Random.Int( 2 ) == 0) {
-                debuff( enemy );
-                if (enemy == Dungeon.hero) Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
+        if(weakestExists()) {
+            currSkeleton = findWeakest();
+            if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()) {
+                spend(TICK);
+                return;
             }
+            //heal skeleton first, unless it's a swarmling
+            if (currSkeleton.HP < currSkeleton.HT && !(currSkeleton instanceof LichSwarmling)) {
+                if (sprite.visible || currSkeleton.sprite.visible) {
+                    sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
+                    Sample.INSTANCE.play(Assets.Sounds.RAY);
+                }
 
-            int dmg = Random.NormalIntRange( 0,1);
-                    //6, 15 );
-            dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-            enemy.damage( dmg, new Lich.EarthenBolt() );
+                currSkeleton.HP = Math.min(currSkeleton.HP + currSkeleton.HT / 5, currSkeleton.HT);
+                if (currSkeleton.sprite.visible) {
+                    currSkeleton.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(currSkeleton.HT / 5), FloatingText.HEALING);
+                }
+                //otherwise give it adrenaline
+            } else {
+                if (sprite.visible || currSkeleton.sprite.visible) {
+                    sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
+                    Sample.INSTANCE.play(Assets.Sounds.RAY);
+                }
+                Buff.affect(currSkeleton, Adrenaline.class, 3f);
 
-            if (!enemy.isAlive() && enemy == Dungeon.hero) {
-                Badges.validateDeathFromEnemyMagic();
-                Dungeon.fail( this );
-                GLog.n( Messages.get(this, "bolt_kill") );
+
             }
         } else {
-            enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+            Invisibility.dispel(this);
+            Char enemy = this.enemy;
+            if (hit(this, enemy, true)) {
+
+                if (Random.Int(2) == 0) {
+                    debuff(enemy);
+                    if (enemy == Dungeon.hero) Sample.INSTANCE.play(Assets.Sounds.DEBUFF);
+                }
+
+                int dmg = Random.NormalIntRange(1, 2);//25, 30 );
+                dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+                enemy.damage(dmg, new Lich.EarthenBolt());
+
+                if (!enemy.isAlive() && enemy == Dungeon.hero) {
+                    Badges.validateDeathFromEnemyMagic();
+                    Dungeon.fail(this);
+                    GLog.n(Messages.get(this, "bolt_kill"));
+                }
+            } else {
+                enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+            }
         }
     }
 
@@ -156,8 +183,8 @@ public abstract class Lich extends Mob{
         for (LichSkeleton skeleton : mySkeletons){
             if (skeleton != null) {
                 skeletonIDArr[i] = skeleton.id();
+                i++;
             }
-            i++;
         }
         bundle.put(STORED_SKELETON_IDS, skeletonIDArr);
     }
@@ -184,44 +211,16 @@ public abstract class Lich extends Mob{
 
 
     public void onZapComplete(){
-        for (LichSkeleton skeleton : mySkeletons) {
-            if (currSkeleton == null || skeleton.HP < currSkeleton.HP) {
-                currSkeleton = skeleton;
-            }
-        }
-        if (currSkeleton == null || currSkeleton.sprite == null || !currSkeleton.isAlive()){
-            return;
-        }
-        //heal skeleton first, unless it's a swarmling
-        if (currSkeleton.HP < currSkeleton.HT && !(currSkeleton instanceof LichSwarmling)) {
-
-            if (sprite.visible || currSkeleton.sprite.visible) {
-                sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
-                Sample.INSTANCE.play(Assets.Sounds.RAY);
-            }
-
-            currSkeleton.HP = Math.min(currSkeleton.HP + currSkeleton.HT / 5, currSkeleton.HT);
-            if (currSkeleton.sprite.visible) {
-                currSkeleton.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(currSkeleton.HT / 5), FloatingText.HEALING);
-            }
-            //otherwise give it adrenaline
-        } else {
-            for (LichSkeleton skeleton : mySkeletons) {
-                if (skeleton.buff(Adrenaline.class) == null) {
-                    if (sprite.visible || skeleton.sprite.visible) {
-                        sprite.parent.add(new Beam.HealthRay(sprite.center(), skeleton.sprite.center()));
-                        Sample.INSTANCE.play(Assets.Sounds.RAY);
-                    }
-                    Buff.affect(skeleton, Adrenaline.class, 3f);
-                    break;
-                }
-            }
-        }
+        zap();
         next();
     }
 
 
     public void summonMinion(){
+        mySkeletons.removeIf(skeletons -> skeletons == null
+                || !skeletons.isAlive()
+                || !Dungeon.level.mobs.contains(skeletons)
+                || skeletons.alignment != alignment);
         if (Actor.findChar(summoningPos) != null || !Dungeon.level.passable[summoningPos]) {
             int pushPos = pos;
             for (int c : PathFinder.NEIGHBOURS8) {
@@ -268,14 +267,14 @@ public abstract class Lich extends Mob{
         summoning = firstSummon = false;
 
 
-        if (mySkeletons.size() <= BLUE_LIMIT && isBlue()) {
+        if (mySkeletons.size() < BLUE_LIMIT && isBlue()) {
             currSkeleton = new LichSkeleton();
             createMinion();
         } else if ((mySkeletons.isEmpty() || currSkeleton == null || !currSkeleton.isActive())
                 && isGreen()) {
             currSkeleton = new LichAbomination();
             createMinion();
-        } else if (mySkeletons.size() <= PURPLE_LIMIT && isPurple()) {
+        } else if (mySkeletons.size() < PURPLE_LIMIT && isPurple()) {
             currSkeleton = new LichSwarmling();
             createMinion();
         } else {
@@ -290,8 +289,6 @@ public abstract class Lich extends Mob{
         GameScene.add(currSkeleton);
         Dungeon.level.occupyCell(currSkeleton);
         mySkeletons.add ( currSkeleton );
-        storedSkeletonIDs.add( currSkeleton.id() );
-
 
         for (Buff b : buffs()){
             if (b.revivePersists) {
@@ -330,7 +327,10 @@ public abstract class Lich extends Mob{
                 }
                 storedSkeletonIDs.clear();
             }
-
+            mySkeletons.removeIf(skeletons -> skeletons == null
+                    || !skeletons.isAlive()
+                    || !Dungeon.level.mobs.contains(skeletons)
+                    || skeletons.alignment != alignment);
 
             if (summoning){
                 summonMinion();
@@ -341,137 +341,129 @@ public abstract class Lich extends Mob{
             if (currSkeleton != null &&
                     (!currSkeleton.isAlive()
                             || !Dungeon.level.mobs.contains(currSkeleton)
-                            || currSkeleton.alignment != alignment)){
-                mySkeletons.remove( currSkeleton );
+                            || currSkeleton.alignment != alignment)) {
+                mySkeletons.remove(currSkeleton);
                 currSkeleton = null;
-                for ( LichSkeleton skeleton : mySkeletons ) {
+                for (LichSkeleton skeleton : mySkeletons) {
                     if (skeleton != null &&
                             (skeleton.isAlive()
                                     && Dungeon.level.mobs.contains(skeleton)
-                                    && skeleton.alignment == alignment)){
+                                    && skeleton.alignment == alignment)) {
                         currSkeleton = skeleton;
                         break;
                     }
                 }
             }
 
+            if (!enemySeen) {
+                return super.act(enemyInFOV, justAlerted);
+            }
 
-            //if enemy is seen, and enemy is within range, and we have no skeleton, summon a skeleton!
-            if (enemySeen
-                    && Dungeon.level.distance(pos, enemy.pos) <= 4
-                    && ((mySkeletons.isEmpty() && isGreen())
-                    || (mySkeletons.size() <= BLUE_LIMIT && isBlue())
-                    || (mySkeletons.size() <= PURPLE_LIMIT && isPurple()))){
+            if ((mySkeletons.isEmpty() && isGreen())
+                    || (mySkeletons.size() < BLUE_LIMIT && isBlue())
+                    || (mySkeletons.size() < PURPLE_LIMIT && isPurple())) {
 
-                summoningPos = -1;
-
-                //we can summon around blocking terrain, but not through it, except unlocked doors
                 boolean[] passable = BArray.not(Dungeon.level.solid, null);
                 BArray.or(Dungeon.level.passable, passable, passable);
-                PathFinder.buildDistanceMap(pos, passable, Dungeon.level.distance(pos, enemy.pos)+3);
+                PathFinder.buildDistanceMap(pos, passable, Dungeon.level.distance(pos, enemy.pos) + 3);
 
-                for (int c : PathFinder.NEIGHBOURS8){
-                    if (Actor.findChar(enemy.pos+c) == null
-                            && PathFinder.distance[enemy.pos+c] != Integer.MAX_VALUE
-                            && Dungeon.level.passable[enemy.pos+c]
-                            && (!hasProp(Lich.this, Property.LARGE) || Dungeon.level.openSpace[enemy.pos+c])
-                            && fieldOfView[enemy.pos+c]
-                            && Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, summoningPos)){
-                        summoningPos = enemy.pos+c;
+                for (int c : PathFinder.NEIGHBOURS8) {
+                    if (Actor.findChar(enemy.pos + c) == null
+                            && PathFinder.distance[enemy.pos + c] != Integer.MAX_VALUE
+                            && Dungeon.level.passable[enemy.pos + c]
+                            && (!hasProp(Lich.this, Property.LARGE) && !isGreen() || Dungeon.level.openSpace[enemy.pos + c])
+                            && fieldOfView[enemy.pos + c]
+                            && Dungeon.level.trueDistance(pos, enemy.pos + c) < Dungeon.level.trueDistance(pos, summoningPos)) {
+                        summoningPos = enemy.pos + c;
                     }
                 }
 
-                if (summoningPos != -1){
-
-                    summoning = true;
-                    sprite.zap( summoningPos );
-
-                    if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[summoningPos]){
-                        Dungeon.hero.interrupt();
-                    }
-
-                    spend( firstSummon ? TICK : 2*TICK );
-                } else {
-                    //wait for a turn
+                if (summoningPos == -1) {
                     spend(TICK);
+                    if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
+                        sprite.zap(enemy.pos);
+                        return false; // Yield to animation callback
+                    }
+                    zap();
+                    return true;
                 }
 
-                return true;
-                //otherwise, if enemy is seen, and we have a skeleton...
-            } else if (enemySeen
-                    && ((!mySkeletons.isEmpty() && isGreen())
-                    || (mySkeletons.size() >= BLUE_LIMIT && isBlue())
-                    || (mySkeletons.size() >= PURPLE_LIMIT && isPurple()))){
+                summoning = true;
+                sprite.zap(summoningPos);
 
+                if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[summoningPos]) {
+                    Dungeon.hero.interrupt();
+                }
+
+                spend(firstSummon ? TICK : 2 * TICK);
+                return true;
+            }
+
+            if (currSkeleton != null && ((!mySkeletons.isEmpty() && isGreen())
+                    || (mySkeletons.size() >= BLUE_LIMIT && isBlue())
+                    || (mySkeletons.size() >= PURPLE_LIMIT && isPurple()))) {
                 spend(TICK);
 
-                boolean teleporting = false;
-                //teleport our skeleton to the enemy if..
-                //we can't see it
-                if (!fieldOfView[currSkeleton.pos]){
-                    teleporting = true;
-
-                    //it has a relatively long path to reach the hero (e.g. it's blocked in a tunnelway)
-                } else if (!currSkeleton.canAttack(enemy)){
+                // Determine if skeleton needs teleportation
+                boolean teleporting = !fieldOfView[currSkeleton.pos];
+                if (!teleporting && !currSkeleton.canAttack(enemy)) {
                     PathFinder.Path skelePath = Dungeon.findPath(currSkeleton, enemy.pos, Dungeon.level.passable, fieldOfView, true);
-
-                    if (skelePath == null || skelePath.size() > 2*Dungeon.level.distance(pos, enemy.pos)){
+                    if (skelePath == null || skelePath.size() > 2 * Dungeon.level.distance(pos, enemy.pos)) {
                         teleporting = true;
                     }
                 }
 
-                if (teleporting){
-
-                    //teleport them to the closest spot next to the enemy that can be seen
-                    if (!Dungeon.level.adjacent(currSkeleton.pos, enemy.pos)){
-                        int telePos = -1;
-                        for (int c : PathFinder.NEIGHBOURS8){
-                            if (Actor.findChar(enemy.pos+c) == null
-                                    && Dungeon.level.passable[enemy.pos+c]
-                                    && fieldOfView[enemy.pos+c]
-                                    && (Dungeon.level.openSpace[enemy.pos+c] || !Char.hasProp(currSkeleton, Property.LARGE))
-                                    && Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, telePos)){
-                                telePos = enemy.pos+c;
-                            }
-                        }
-
-                        if (telePos != -1){
-
-                            if (sprite != null && sprite.visible) {
-                                summoning = true;
-                                summoningPos = telePos;
-                                sprite.zap(telePos);
-                                if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[summoningPos]) {
-                                    Dungeon.hero.interrupt();
-                                }
-                                spend(TICK); //2 ticks total, it can't be the first summon
-                            }
-                        }
+                if (!teleporting) {
+                    int zapTarget = weakestExists() ? currSkeleton.pos : enemy.pos;
+                    if (sprite != null && sprite.visible) {
+                        sprite.zap(zapTarget);
+                        return false;
                     }
-
+                    zap();
                     return true;
+                }
 
-                } else {
+                if (Dungeon.level.adjacent(currSkeleton.pos, enemy.pos)) {
+                    return true;
+                }
 
-                    //zap skeleton
-                    if (currSkeleton.HP < currSkeleton.HT || currSkeleton.buff(Adrenaline.class) == null) {
-                        if (sprite != null && sprite.visible){
-                            sprite.zap(currSkeleton.pos);
-                            return false;
-                        } else {
-                            onZapComplete();
-                        }
+                int telePos = -1;
+                for (int c : PathFinder.NEIGHBOURS8) {
+                    if (Actor.findChar(enemy.pos + c) == null
+                            && Dungeon.level.passable[enemy.pos + c]
+                            && fieldOfView[enemy.pos + c]
+                            && (Dungeon.level.openSpace[enemy.pos + c] || !Char.hasProp(currSkeleton, Property.LARGE))
+                            && Dungeon.level.trueDistance(pos, enemy.pos + c) < Dungeon.level.trueDistance(pos, telePos)) {
+                        telePos = enemy.pos + c;
                     }
+                }
 
+                if (telePos == -1) {
+                    int zapTarget = weakestExists() ? currSkeleton.pos : enemy.pos;
+                    if (sprite != null && sprite.visible) {
+                        sprite.zap(zapTarget);
+                        return false;
+                    }
+                    zap();
+                    return true;
+                }
+
+                if (sprite != null && sprite.visible) {
+                    summoning = true;
+                    summoningPos = telePos;
+                    sprite.zap(telePos);
+                    if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[summoningPos]) {
+                        Dungeon.hero.interrupt();
+                    }
+                    spend(TICK);
                 }
 
                 return true;
 
-                //otherwise, default to regular hunting behaviour
-            } else {
-                return super.act(enemyInFOV, justAlerted);
             }
+            return super.act(enemyInFOV, justAlerted);
         }
+
     }
 
     public static class LichSkeleton extends Skeleton {
@@ -486,7 +478,7 @@ public abstract class Lich extends Mob{
 
             //20/25 health to start
             HT = 65;
-            HP = 50;
+            HP = 1;//50;
         }
 
         //When we're done testing, this will boost the skeleton's damage
@@ -497,6 +489,7 @@ public abstract class Lich extends Mob{
         public float spawningWeight() {
             return 0;
         }
+
 
         public static class LichSkeletonSprite extends SkeletonSprite{
 
@@ -525,7 +518,7 @@ public abstract class Lich extends Mob{
 
             //20/25 health to start
             HT = 120;
-            HP = 100;
+            HP = 1;//100;
 
             properties.add(Property.LARGE);
         }
@@ -566,7 +559,7 @@ public abstract class Lich extends Mob{
             //no loot or exp
             maxLvl = -5;
 
-            HP = HT = 20;
+            HP = HT = 1;//20;
         }
 
         //When we're done testing, this will boost the swarmling's damage
@@ -628,6 +621,40 @@ public abstract class Lich extends Mob{
 
     private boolean isPurple() {
         return spriteClass == LichSprite.Purple.class;
+    }
+
+    private LichSkeleton findWeakest() {
+        LichSkeleton tempSkeleton = currSkeleton;
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (tempSkeleton == null || skeleton.HP < tempSkeleton.HP) {
+                tempSkeleton = skeleton;
+            }
+        }
+        if (!(tempSkeleton.HP == tempSkeleton.HT)) {
+            return tempSkeleton;
+        } else {
+            for (LichSkeleton skeleton : mySkeletons) {
+                if (skeleton.buff(Adrenaline.class) == null) {
+                    return skeleton;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean weakestExists() {
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (skeleton.HP < skeleton.HT) {
+                return true;
+            }
+        }
+        for (LichSkeleton skeleton : mySkeletons) {
+            if (skeleton.buff(Adrenaline.class) == null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static Class<? extends Lich> random(){

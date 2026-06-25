@@ -24,7 +24,7 @@ public abstract class LichSprite extends MobSprite {
     public LichSprite() {
         super();
 
-        int c= texOffset();
+        int c = texOffset();
 
         texture( Assets.Sprites.LICH );
         TextureFilm frames = new TextureFilm( texture, 16, 16 );
@@ -119,6 +119,18 @@ public abstract class LichSprite extends MobSprite {
             summoningBones.pour(Speck.factory(Speck.RATTLE), 0.2f);
             summoningBones.visible = Dungeon.level.heroFOV[((Lich) ch).summoningPos];
             if (visible || summoningBones.visible ) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP, 1f, 0.8f );
+        } else if (ch instanceof Lich && !((Lich) ch).weakestExists()) {
+            MagicMissile.boltFromChar( parent,
+                    boltType,
+                    this,
+                    cell,
+                    new Callback() {
+                        @Override
+                        public void call() {
+                            ((Lich)ch).onZapComplete();
+                        }
+                    } );
+            Sample.INSTANCE.play( Assets.Sounds.ZAP );
         }
     }
 
@@ -129,8 +141,10 @@ public abstract class LichSprite extends MobSprite {
             if (ch instanceof Lich){
                 if (((Lich) ch).summoning){
                     charge();
-                } else {
+                } else if (((Lich) ch).weakestExists()) {
                     ((Lich)ch).onZapComplete();
+                    idle();
+                } else {
                     idle();
                 }
             } else {
