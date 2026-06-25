@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.NecromancerSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.PhylacterySprite;
 import com.watabou.utils.*;
 
@@ -123,14 +124,20 @@ public abstract class Phylactery extends Mob {
             return true;
         }
         if (firstSummon) {
-            summoningPos = -1;
             summoning = true;
-            spend(TICK);
+            findPos();
+            if (sprite != null && sprite.visible) {
+                sprite.zap(summoningPos);
+            }
+            firstSummon = false;
             return true;
         } else if ( myLich == null || myLich.sprite == null || !myLich.isAlive()) {
-            summoningPos = -1;
             summoning = true;
-            spend(TICK*5);
+            findPos();
+            if (sprite != null && sprite.visible) {
+                sprite.zap(summoningPos);
+            }
+            spend(5*TICK);
             return true;
         }
 
@@ -138,23 +145,12 @@ public abstract class Phylactery extends Mob {
     }
 
     public void summonMinion() {
-        for (int i : PathFinder.NEIGHBOURS8) {
-            if (Actor.findChar(pos + i) == null && summoningPos == -1
-                    && Dungeon.level.passable[pos + i]
-                    && (!Char.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[i])) {
-                summoningPos = pos + i;
-                break;
-            }
-        }
-
-
         if (summoningPos != -1) {
             if (myLich == null || !myLich.isActive()) {
                 myLich = lichColor();
                 myLich.pos = summoningPos;
                 GameScene.add(myLich);
                 Dungeon.level.occupyCell(myLich);
-                //myLich.state = WANDERING;
                 for (Buff b : buffs()) {
                     if (b.revivePersists) {
                         Buff.affect(myLich, b.getClass());
@@ -162,6 +158,18 @@ public abstract class Phylactery extends Mob {
                 }
             }
             summoning = firstSummon = false;
+        }
+        ((PhylacterySprite)sprite).finishSummoning();
+    }
+
+    private void findPos() {
+        for (int i : PathFinder.NEIGHBOURS8) {
+            if (Actor.findChar(pos + i) == null && summoningPos == -1
+                    && Dungeon.level.passable[pos + i]
+                    && (!Char.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[i])) {
+                summoningPos = pos + i;
+                break;
+            }
         }
     }
 
