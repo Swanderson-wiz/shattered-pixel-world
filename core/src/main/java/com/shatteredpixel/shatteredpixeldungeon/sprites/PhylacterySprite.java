@@ -6,7 +6,7 @@ import com.watabou.noosa.TextureFilm;
 public abstract class PhylacterySprite extends MobSprite {
 
     protected abstract int texOffset();
-    private Animation activeIdle;
+    private Animation charging;
 
     public PhylacterySprite() {
         super();
@@ -19,8 +19,8 @@ public abstract class PhylacterySprite extends MobSprite {
         idle = new Animation( 1, true );
         idle.frames( frames, 0+c, 1+c, 2+c, 3+c, 4+c );
 
-        activeIdle = new Animation( 1, false );
-        activeIdle.frames( frames, 5+c, 6+c );
+        charging = new Animation( 1, false );
+        charging.frames( frames, 5+c, 6+c );
 
         run = idle.clone();
 
@@ -30,6 +30,10 @@ public abstract class PhylacterySprite extends MobSprite {
         die.frames( frames, 7+c, 8+c, 9+c, 10+c );
 
         play( idle );
+    }
+
+    public void charge(){
+        play(charging);
     }
 
     @Override
@@ -43,10 +47,10 @@ public abstract class PhylacterySprite extends MobSprite {
     }
     public static class Blue extends PhylacterySprite {
         @Override
-        protected int texOffset() { return 10; }
+        protected int texOffset() { return 11; }
     }
     public static class Purple extends PhylacterySprite {
         @Override
-        protected int texOffset() { return 20; }
+        protected int texOffset() { return 22; }
     }
 }
