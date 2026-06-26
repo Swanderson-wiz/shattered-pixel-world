@@ -27,11 +27,11 @@ public abstract class Lich extends Mob{
 
 
     {
-        HP = HT = 1;//120;
+        HP = HT = 120;
         defenseSkill = 14;
 
-        EXP = 14;
-        maxLvl = 5;//30;
+        //No EXP so you can't farm them. The phylactery gives the EXP
+        maxLvl = 30;
 
         properties.add(Property.UNDEAD);
 
@@ -130,7 +130,7 @@ public abstract class Lich extends Mob{
                     sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
                     Sample.INSTANCE.play(Assets.Sounds.RAY);
                 }
-                Buff.affect(currSkeleton, Adrenaline.class, 3f);
+                Buff.affect(currSkeleton, Adrenaline.class, 6f);
 
 
             }
@@ -144,7 +144,7 @@ public abstract class Lich extends Mob{
                     if (enemy == Dungeon.hero) Sample.INSTANCE.play(Assets.Sounds.DEBUFF);
                 }
 
-                int dmg = Random.NormalIntRange(1, 2);//25, 30 );
+                int dmg = Random.NormalIntRange( 25, 30 );
                 dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
                 enemy.damage(dmg, new Lich.EarthenBolt());
 
@@ -476,14 +476,13 @@ public abstract class Lich extends Mob{
             //no loot or exp
             maxLvl = -5;
 
-            //20/25 health to start
-            HT = 65;
-            HP = 1;//50;
+            //50/60 health to start
+            HT = 60;
+            HP = 50;
         }
 
-        //When we're done testing, this will boost the skeleton's damage
-        //@Override
-        // public int damageRoll() { return Random.NormalIntRange( 20, 30 ); }
+        @Override
+        public int damageRoll() { return Random.NormalIntRange( 20, 30 ); }
 
         @Override
         public float spawningWeight() {
@@ -516,9 +515,9 @@ public abstract class Lich extends Mob{
             //no loot or exp
             maxLvl = -5;
 
-            //20/25 health to start
-            HT = 120;
-            HP = 1;//100;
+            //100/125 health to start
+            HT = 125;
+            HP = 100;
 
             properties.add(Property.LARGE);
         }
@@ -528,10 +527,8 @@ public abstract class Lich extends Mob{
         @Override
         public String name() { return Messages.get( SkeletalAbomination.class, "name"); }
 
-        //When we're done testing, this will boost the skeleton's damage
-        //@Override
-        // public int damageRoll() { return Random.NormalIntRange( 30, 35 ); }
-
+        @Override
+        public int damageRoll() { return Random.NormalIntRange( 30, 35 ); }
 
         public static class LichAbominationSprite extends SkeletalAbominationSprite {
 
@@ -559,12 +556,12 @@ public abstract class Lich extends Mob{
             //no loot or exp
             maxLvl = -5;
 
-            HP = HT = 1;//20;
+            //starts at full b\c the lich doesn't heal swarmlings (intentionally)
+            HP = HT = 20;
         }
 
-        //When we're done testing, this will boost the swarmling's damage
-        //@Override
-        // public int damageRoll() { return Random.NormalIntRange( 15, 20 ); }
+        @Override
+        public int damageRoll() { return Random.NormalIntRange( 15, 20 ); }
 
         @Override
         public String description() { return Messages.get( SkeletonSwarmling.class, "desc" ); }
@@ -585,6 +582,11 @@ public abstract class Lich extends Mob{
             }
         }
 
+    }
+
+    @Override
+    public String description() {
+        return super.description() + "\n\n" + Messages.get(this, "spell_desc");
     }
 
     public static class GreenLich extends Lich {

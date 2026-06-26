@@ -1,20 +1,23 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.NecromancerSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.PhylacterySprite;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.*;
 
 public abstract class Phylactery extends Mob {
 
     {
-        HP = HT = 1;//50;
+        HP = HT = 50;
         
+        EXP = 14;
         maxLvl = -2;
         
         properties.add(Property.INORGANIC);
@@ -144,29 +147,77 @@ public abstract class Phylactery extends Mob {
         return true;
     }
 
+    public static class SummoningBlockDamage{}
+
     public void summonMinion() {
-        if (summoningPos != -1) {
-            if (myLich == null || !myLich.isActive()) {
-                myLich = lichColor();
-                myLich.pos = summoningPos;
-                GameScene.add(myLich);
-                Dungeon.level.occupyCell(myLich);
-                for (Buff b : buffs()) {
-                    if (b.revivePersists) {
-                        Buff.affect(myLich, b.getClass());
-                    }
+        if (summoningPos == -1) {
+            return;
+        }
+        if (Actor.findChar(summoningPos) != null || !Dungeon.level.passable[summoningPos]) {
+
+            int pushPos = pos;
+            for (int c : PathFinder.NEIGHBOURS8) {
+                if (Actor.findChar(summoningPos + c) == null
+                        && Dungeon.level.passable[summoningPos + c]
+                        && (Dungeon.level.openSpace[summoningPos + c] || !hasProp(Actor.findChar(summoningPos), Property.LARGE))
+                        && Dungeon.level.trueDistance(pos, summoningPos + c) > Dungeon.level.trueDistance(pos, pushPos)) {
+                    pushPos = summoningPos + c;
                 }
             }
-            summoning = firstSummon = false;
+
+            //push enemy, or wait a turn if there is no valid pushing position
+            if (pushPos != pos) {
+
+                Char ch = Actor.findChar(summoningPos);
+                //no push if char is immovable, move our skeleton instead
+                if (ch == null || Char.hasProp(ch, Property.IMMOVABLE)) {
+                    summoningPos = pushPos;
+                } else {
+                    Actor.add(new Pushing(ch, ch.pos, pushPos));
+
+                    ch.pos = pushPos;
+                    Dungeon.level.occupyCell(ch);
+                }
+
+            } else {
+
+                //attempt to damage the blocker in addition to waiting
+                Char blocker = Actor.findChar(summoningPos);
+                if (blocker != null && blocker.alignment != alignment) {
+                    blocker.damage(Random.NormalIntRange(2, 10), new SummoningBlockDamage());
+                    if (blocker == Dungeon.hero && !blocker.isAlive()) {
+                        Badges.validateDeathFromEnemyMagic();
+                        Dungeon.fail(this);
+                        GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
+                    }
+                }
+
+                spend(TICK);
+                return;
+            }
         }
-        ((PhylacterySprite)sprite).finishSummoning();
+        if (myLich == null || !myLich.isActive()) {
+            myLich = lichColor();
+            myLich.state = myLich.HUNTING;
+            myLich.pos = summoningPos;
+            GameScene.add(myLich);
+            Dungeon.level.occupyCell(myLich);
+            for (Buff b : buffs()) {
+                if (b.revivePersists) {
+                    Buff.affect(myLich, b.getClass());
+                }
+            }
+        }
+        summoning = firstSummon = false;
+        spend(TICK);
+        ((PhylacterySprite) sprite).finishSummoning();
     }
 
     private void findPos() {
         for (int i : PathFinder.NEIGHBOURS8) {
             if (Actor.findChar(pos + i) == null && summoningPos == -1
                     && Dungeon.level.passable[pos + i]
-                    && (!Char.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[i])) {
+                    && (!Char.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[pos+i])) {
                 summoningPos = pos + i;
                 break;
             }
