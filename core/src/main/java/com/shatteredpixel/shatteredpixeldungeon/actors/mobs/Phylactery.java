@@ -17,6 +17,7 @@ public abstract class Phylactery extends Mob {
     {
         HP = HT = 1;//50;
         
+        EXP = 14;
         maxLvl = -2;
         
         properties.add(Property.INORGANIC);

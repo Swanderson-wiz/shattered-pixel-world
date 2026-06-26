@@ -30,7 +30,7 @@ public abstract class Lich extends Mob{
         HP = HT = 1;//120;
         defenseSkill = 14;
 
-        EXP = 14;
+        //EXP = 14;
         maxLvl = 5;//30;
 
         properties.add(Property.UNDEAD);
@@ -130,7 +130,7 @@ public abstract class Lich extends Mob{
                     sprite.parent.add(new Beam.HealthRay(sprite.center(), currSkeleton.sprite.center()));
                     Sample.INSTANCE.play(Assets.Sounds.RAY);
                 }
-                Buff.affect(currSkeleton, Adrenaline.class, 3f);
+                Buff.affect(currSkeleton, Adrenaline.class, 6f);
 
 
             }
@@ -585,6 +585,11 @@ public abstract class Lich extends Mob{
             }
         }
 
+    }
+
+    @Override
+    public String description() {
+        return super.description() + "\n\n" + Messages.get(this, "spell_desc");
     }
 
     public static class GreenLich extends Lich {
