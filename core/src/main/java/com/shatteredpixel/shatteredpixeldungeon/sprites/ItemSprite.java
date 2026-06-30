@@ -74,7 +74,10 @@ public class ItemSprite extends MovieClip {
 	protected float shadowWidth     = 1f;
 	protected float shadowHeight    = 0.25f;
 	protected float shadowOffset    = 0.5f;
-	
+
+	//||||||||||||||||||||||||||||||||||||||||||||
+ 	//NEED TO CHANGE SO IT'S EASIER TO ADD ITEMS
+ 	//||||||||||||||||||||||||||||||||||||||||||||
 	public ItemSprite() {
 		this( ItemSpriteSheet.SOMETHING, null );
 	}
@@ -98,6 +101,8 @@ public class ItemSprite extends MovieClip {
 		
 		view(image, glowing);
 	}
+	//|||||||||||||||||||||||||||||||||||||||||||||||||
+ 	//|||||||||||||||||||||||||||||||||||||||||||||||||
 	
 	public void link() {
 		link(heap);
@@ -214,6 +219,10 @@ public class ItemSprite extends MovieClip {
 			return view( 0, null );
 		}
 
+
+		//||||||||||||||||||||||||||||||||||||||||||||
+		//NEED TO CHANGE SO IT'S EASIER TO ADD ITEMS
+		//||||||||||||||||||||||||||||||||||||||||||||
 		switch (heap.type) {
 			case HEAP: case FOR_SALE:
 				view( heap.peek() ); break;
@@ -232,6 +241,8 @@ public class ItemSprite extends MovieClip {
 			default:
 				view( 0, null );
 		}
+		//|||||||||||||||||||||||||||||||||||||||||||||||||
+		//|||||||||||||||||||||||||||||||||||||||||||||||||
 
 		alpha( heap.hidden ? 0.15f : 1f);
 
@@ -246,6 +257,9 @@ public class ItemSprite extends MovieClip {
 		return this;
 	}
 
+	//||||||||||||||||||||||||||||||||||||||||||||
+	//NEED TO CHANGE SO IT'S EASIER TO ADD ITEMS
+	//||||||||||||||||||||||||||||||||||||||||||||
 	public void frame( int image ){
 		frame( ItemSpriteSheet.film.get( image ));
 
@@ -255,7 +269,9 @@ public class ItemSprite extends MovieClip {
 			perspectiveRaise =  (5 + 8 - height) / 16f;
 		}
 	}
-	
+	//|||||||||||||||||||||||||||||||||||||||||||||||||
+	//|||||||||||||||||||||||||||||||||||||||||||||||||
+
 	public synchronized void glow( Glowing glowing ){
 		this.glowing = glowing;
 		if (glowing == null) resetColor();
@@ -384,8 +400,14 @@ public class ItemSprite extends MovieClip {
 		}
 	}
 
+	//||||||||||||||||||||||||||||||||||||||||||||
+	//NEED TO CHANGE SO IT'S EASIER TO ADD ITEMS
+	//||||||||||||||||||||||||||||||||||||||||||||
 	public static int pick( int index, int x, int y ) {
 		SmartTexture tx = TextureCache.get( Assets.Sprites.ITEMS );
+
+		//|||||||||||||||||||||||||||||||||||||||||||||||||
+		//|||||||||||||||||||||||||||||||||||||||||||||||||
 		int rows = tx.width / SIZE;
 		int row = index / rows;
 		int col = index % rows;

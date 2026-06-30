@@ -243,6 +243,9 @@ public class MeleeWeapon extends Weapon {
 		return baseChargeUse(hero, target);
 	}
 
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||
+	//NEED TO CHANGE TO ACCOUNT FOR OTHER STATS
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||
 	public int tier;
 
 	@Override
@@ -264,6 +267,8 @@ public class MeleeWeapon extends Weapon {
 		}
 		return req;
 	}
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 	private static boolean evaluatingTwinUpgrades = false;
 	@Override

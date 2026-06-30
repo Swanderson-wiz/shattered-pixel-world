@@ -351,6 +351,11 @@ abstract public class Weapon extends KindOfWeapon {
 		}
 	}
 
+	//||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//NEED TO MESS WITH THIS AND ADD ALL THE OTHER STATS
+	//ALSO, FIND THE LOCATIONS THESE ARE USED, AND UPDATE THOSE
+	//AS WELL
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	public int STRReq(){
 		return STRReq(level());
 	}
@@ -363,6 +368,8 @@ abstract public class Weapon extends KindOfWeapon {
 		//strength req decreases at +1,+3,+6,+10,etc.
 		return (8 + tier * 2) - (int)(Math.sqrt(8 * lvl + 1) - 1)/2;
 	}
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//|||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 	@Override
 	public int level() {
