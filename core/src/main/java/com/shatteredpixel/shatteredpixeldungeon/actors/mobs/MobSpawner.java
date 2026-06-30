@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.SpectralKnightSprite;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class MobSpawner extends Actor {
 			case 1: default:
 				//3x rat, 1x snake
 				return new ArrayList<>(Arrays.asList(
-						Spriggan.class, Spriggan.class, Goblin.class,
+						SpectralKnight.class, SpectralKnight.class, Goblin.class,
 						Snake.class));
 			case 2:
 				//2x rat, 1x snake, 2x gnoll
