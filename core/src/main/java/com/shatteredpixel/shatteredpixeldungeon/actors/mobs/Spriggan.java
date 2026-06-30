@@ -14,7 +14,7 @@ public class Spriggan extends Mob {
         EXP = 1;
         maxLvl = 1;
 
-
+        //Need to make them flammable at some point
     }
 
     @Override
