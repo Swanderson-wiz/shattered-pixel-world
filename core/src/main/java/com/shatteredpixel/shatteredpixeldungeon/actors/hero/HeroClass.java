@@ -203,6 +203,7 @@ public enum HeroClass {
 
 	private static void initRogue( Hero hero ) {
 		(hero.belongings.weapon = new Dagger()).identify();
+		(hero.belongings.secondWep = new Dagger()).identify();
 
 		CloakOfShadows cloak = new CloakOfShadows();
 		(hero.belongings.artifact = cloak).identify();
