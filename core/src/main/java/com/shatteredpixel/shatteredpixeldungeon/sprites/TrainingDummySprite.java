@@ -4,9 +4,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
 
-public class DummySprite extends MobSprite {
+public class TrainingDummySprite extends MobSprite {
 
-    public DummySprite() {
+    public TrainingDummySprite() {
         super();
 
         texture (Assets.Sprites.TRAINING_DUMMY);
@@ -19,6 +19,8 @@ public class DummySprite extends MobSprite {
         run = idle.clone();
         attack = idle.clone();
         die = idle.clone();
+
+        play( idle );
     }
 
 }
