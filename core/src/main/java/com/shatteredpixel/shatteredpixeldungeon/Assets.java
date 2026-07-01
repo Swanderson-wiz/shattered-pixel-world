@@ -348,5 +348,6 @@ public class Assets {
 		public static final String SKELE_ABOMINATION= "sprites/skeletal_abomination.png";
 		public static final String SPRIGGAN 		= "sprites/spriggan.png";
 		public static final String SPECTRAL_KNIGHT  = "sprites/spectral_knight.png";
+		public static final String TRAINING_DUMMY   = "sprites/training_dummy.png";
 	}
 }
