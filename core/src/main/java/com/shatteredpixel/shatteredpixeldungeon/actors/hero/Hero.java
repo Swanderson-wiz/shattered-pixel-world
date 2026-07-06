@@ -684,12 +684,14 @@ public class Hero extends Char {
 	@Override
 	public int damageRoll() {
 		KindOfWeapon wep = belongings.attackingWeapon();
+		KindOfWeapon secondwep = belongings.secondWep;
 		int dmg;
 
 		if (!RingOfForce.fightingUnarmed(this)) {
 			dmg = wep.damageRoll( this );
 
 			if (!(wep instanceof MissileWeapon)) dmg += RingOfForce.armedDamageBonus(this);
+			if (!(wep instanceof MissileWeapon) && secondwep != null) dmg += secondwep.damageRoll( this ) / 2;
 		} else {
 			dmg = RingOfForce.damageRoll(this);
 			if (RingOfForce.unarmedGetsWeaponAugment(this)){
