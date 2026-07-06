@@ -75,7 +75,7 @@ public class MobSpawner extends Actor {
 			case 1: default:
 				//3x rat, 1x snake
 				return new ArrayList<>(Arrays.asList(
-						Elemental.class, TrainingDummy.class
+						GreaterElemental.class, TrainingDummy.class
 						//Rat.class, Rat.class, Goblin.class,
 						//Snake.class
 				));
@@ -161,27 +161,27 @@ public class MobSpawner extends Actor {
 				//3x ghoul, 1x elemental, 1x warlock
 				return new ArrayList<>(Arrays.asList(
 						Ghoul.class, Ghoul.class, Ghoul.class,
-						LesserElemental.random(),
+						Elemental.random(),
 						Warlock.class));
 			case 17:
 				//1x ghoul, 2x elemental, 1x warlock, 1x monk
 				return new ArrayList<>(Arrays.asList(
 						Ghoul.class,
-						LesserElemental.random(), LesserElemental.random(),
+						Elemental.random(), Elemental.random(),
 						Warlock.class,
 						Monk.class));
 			case 18:
 				//1x ghoul, 1x elemental, 2x warlock, 2x monk, 1x golem
 				return new ArrayList<>(Arrays.asList(
 						Ghoul.class,
-						LesserElemental.random(),
+						Elemental.random(),
 						Warlock.class, Warlock.class,
 						Monk.class, Monk.class,
 						Golem.class));
 			case 19: case 20:
 				//1x elemental, 2x warlock, 2x monk, 3x golem
 				return new ArrayList<>(Arrays.asList(
-						LesserElemental.random(),
+						Elemental.random(),
 						Warlock.class, Warlock.class,
 						Monk.class, Monk.class,
 						Golem.class, Golem.class, Golem.class));
@@ -271,7 +271,7 @@ public class MobSpawner extends Actor {
 
 		RARE_ALTS.put(Monk.class,           Senior.class);
 		//swapping to chaos elemental actually happens in Elemental.random
-		RARE_ALTS.put(LesserElemental.class,      LesserElemental.LesserChaosElemental.class);
+		RARE_ALTS.put(Elemental.class,      Elemental.ChaosElemental.class);
 
 		RARE_ALTS.put(Scorpio.class,        Acidic.class);
 	}
