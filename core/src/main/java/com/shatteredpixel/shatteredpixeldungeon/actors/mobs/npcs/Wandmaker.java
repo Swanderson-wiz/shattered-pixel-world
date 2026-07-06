@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.LesserElemental;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotHeart;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -401,7 +401,7 @@ public class Wandmaker extends NPC {
 			} else if (type == 2){
 				//hero has summoned the newborn elemental
 				for (Mob m : Dungeon.level.mobs) {
-					if (m instanceof Elemental.NewbornFireElemental) {
+					if (m instanceof LesserElemental.NewbornLesserFireElemental) {
 						return true;
 					}
 				}

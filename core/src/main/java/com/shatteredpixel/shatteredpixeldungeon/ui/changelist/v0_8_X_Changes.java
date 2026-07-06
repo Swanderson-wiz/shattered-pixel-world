@@ -44,7 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DM100Sprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DM300Sprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.LesserElementalSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GuardSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -515,7 +515,7 @@ public class v0_8_X_Changes {
 				"_-_ Damage reduced by ~11%\n" +
 				"_-_ Accuracy reduced by ~28%"));
 
-		changes.addButton( new ChangeButton(new Image(new ElementalSprite.Frost()), "Dwarven City",
+		changes.addButton( new ChangeButton(new Image(new LesserElementalSprite.Frost()), "Dwarven City",
 				"_Dwarven Ghouls_ are a new enemy which replace elementals as the most simple opponent in the city. They are fairly weak on their own, but always travel in groups.\n\n" +
 				"_Elementals_ now have ~10% less HP, multiple different types, and will occasionally fire debuffing ranged attacks. The debuffs they inflict, and their resistances, vary by the elemental type.\n\n" +
 				"_Monks_ no longer disarm, but instead build focus which allows them to always dodge one physical attack. Monks start combat with full focus and build it faster when on the move.\n\n" +

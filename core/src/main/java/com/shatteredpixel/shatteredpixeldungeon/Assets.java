@@ -293,7 +293,7 @@ public class Assets {
 		public static final String SHEEP    = "sprites/sheep.png";
 		public static final String KEEPER   = "sprites/shopkeeper.png";
 		public static final String BAT      = "sprites/bat.png";
-		public static final String ELEMENTAL= "sprites/elemental.png";
+		public static final String LESSER_ELEMENTAL = "sprites/elemental.png";
 		public static final String MONK     = "sprites/monk.png";
 		public static final String WARLOCK  = "sprites/warlock.png";
 		public static final String GOLEM    = "sprites/golem.png";
@@ -349,5 +349,6 @@ public class Assets {
 		public static final String SPRIGGAN 		= "sprites/spriggan.png";
 		public static final String SPECTRAL_KNIGHT  = "sprites/spectral_knight.png";
 		public static final String TRAINING_DUMMY   = "sprites/training_dummy.png";
+		public static final String ELEMENTAL 		= "sprites/fire_elemental.png";
 	}
 }

@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.LesserElemental;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
@@ -69,7 +69,7 @@ public class SummonElemental extends Spell {
 		talentChance = 1/(float)Recipe.OUT_QUANTITY;
 	}
 
-	private Class<? extends Elemental> summonClass = Elemental.AllyNewBornElemental.class;
+	private Class<? extends LesserElemental> summonClass = LesserElemental.AllyNewBornLesserElemental.class;
 
 	@Override
 	public ArrayList<String> actions(Hero hero) {
@@ -102,15 +102,15 @@ public class SummonElemental extends Spell {
 		if (!spawnPoints.isEmpty()){
 
 			for (Char ch : Actor.chars()){
-				if (ch instanceof Elemental && ch.buff(InvisAlly.class) != null){
+				if (ch instanceof LesserElemental && ch.buff(InvisAlly.class) != null){
 					ScrollOfTeleportation.appear( ch, Random.element(spawnPoints) );
-					((Elemental) ch).state = ((Elemental) ch).HUNTING;
+					((LesserElemental) ch).state = ((LesserElemental) ch).HUNTING;
 					curUser.spendAndNext(Actor.TICK);
 					return;
 				}
 			}
 
-			Elemental elemental = Reflection.newInstance(summonClass);
+			LesserElemental elemental = Reflection.newInstance(summonClass);
 			GameScene.add( elemental );
 			Buff.affect(elemental, InvisAlly.class);
 			elemental.setSummonedALly();
@@ -134,10 +134,10 @@ public class SummonElemental extends Spell {
 
 	@Override
 	public ItemSprite.Glowing glowing() {
-		if (summonClass == Elemental.FireElemental.class)   return new ItemSprite.Glowing(0xFFBB33);
-		if (summonClass == Elemental.FrostElemental.class)  return new ItemSprite.Glowing(0x8EE3FF);
-		if (summonClass == Elemental.ShockElemental.class)  return new ItemSprite.Glowing(0xFFFF85);
-		if (summonClass == Elemental.ChaosElemental.class)  return new ItemSprite.Glowing(0xE3E3E3, 0.5f);
+		if (summonClass == LesserElemental.LesserFireElemental.class)   return new ItemSprite.Glowing(0xFFBB33);
+		if (summonClass == LesserElemental.LesserFrostElemental.class)  return new ItemSprite.Glowing(0x8EE3FF);
+		if (summonClass == LesserElemental.LesserShockElemental.class)  return new ItemSprite.Glowing(0xFFFF85);
+		if (summonClass == LesserElemental.LesserChaosElemental.class)  return new ItemSprite.Glowing(0xE3E3E3, 0.5f);
 		return super.glowing();
 	}
 
@@ -147,11 +147,11 @@ public class SummonElemental extends Spell {
 
 		desc += "\n\n";
 
-		if (summonClass == Elemental.AllyNewBornElemental.class)    desc += Messages.get(this, "desc_newborn");
-		if (summonClass == Elemental.FireElemental.class)           desc += Messages.get(this, "desc_fire");
-		if (summonClass == Elemental.FrostElemental.class)          desc += Messages.get(this, "desc_frost");
-		if (summonClass == Elemental.ShockElemental.class)          desc += Messages.get(this, "desc_shock");
-		if (summonClass == Elemental.ChaosElemental.class)          desc += Messages.get(this, "desc_chaos");
+		if (summonClass == LesserElemental.AllyNewBornLesserElemental.class)    desc += Messages.get(this, "desc_newborn");
+		if (summonClass == LesserElemental.LesserFireElemental.class)           desc += Messages.get(this, "desc_fire");
+		if (summonClass == LesserElemental.LesserFrostElemental.class)          desc += Messages.get(this, "desc_frost");
+		if (summonClass == LesserElemental.LesserShockElemental.class)          desc += Messages.get(this, "desc_shock");
+		if (summonClass == LesserElemental.LesserChaosElemental.class)          desc += Messages.get(this, "desc_chaos");
 
 		return desc;
 	}
@@ -195,22 +195,22 @@ public class SummonElemental extends Spell {
 			if (item instanceof PotionOfLiquidFlame) {
 				Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				curUser.sprite.emitter().burst( FlameParticle.FACTORY, 12 );
-				summonClass = Elemental.FireElemental.class;
+				summonClass = LesserElemental.LesserFireElemental.class;
 
 			} else if (item instanceof PotionOfFrost){
 				Sample.INSTANCE.play(Assets.Sounds.SHATTER);
 				curUser.sprite.emitter().burst( MagicMissile.MagicParticle.FACTORY, 12 );
-				summonClass = Elemental.FrostElemental.class;
+				summonClass = LesserElemental.LesserFrostElemental.class;
 
 			} else if (item instanceof ScrollOfRecharging){
 				Sample.INSTANCE.play(Assets.Sounds.ZAP);
 				curUser.sprite.emitter().burst( ShaftParticle.FACTORY, 12 );
-				summonClass = Elemental.ShockElemental.class;
+				summonClass = LesserElemental.LesserShockElemental.class;
 
 			} else if (item instanceof ScrollOfTransmutation){
 				Sample.INSTANCE.play(Assets.Sounds.READ);
 				curUser.sprite.emitter().burst( RainbowParticle.BURST, 12 );
-				summonClass = Elemental.ChaosElemental.class;
+				summonClass = LesserElemental.LesserChaosElemental.class;
 			}
 
 			curUser.sprite.operate(curUser.pos);

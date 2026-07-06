@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.LesserElemental;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Gnoll;
@@ -91,7 +91,7 @@ public class AscensionChallenge extends Buff {
 		modifiers.put(DM200.class,          2f);
 
 		modifiers.put(Ghoul.class,          1.67f);
-		modifiers.put(Elemental.class,      1.67f);
+		modifiers.put(LesserElemental.class,      1.67f);
 		modifiers.put(Warlock.class,        1.5f);
 		modifiers.put(Monk.class,           1.5f);
 		modifiers.put(Golem.class,          1.33f);

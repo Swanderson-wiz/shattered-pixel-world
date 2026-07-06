@@ -25,6 +25,7 @@ public class TrainingDummy extends Mob{
         Dungeon.level.updateFieldOfView(this, fieldOfView);
 
         throwItems();
+        sprite.hideSleep();
 
         //mob logic
         enemy = chooseEnemy();
