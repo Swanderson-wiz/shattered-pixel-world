@@ -1,13 +1,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterFireElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterWaterElementalSprite;
 import com.watabou.utils.Random;
 
 public class GreaterElemental extends Mob{
 
     {
-        spriteClass = GreaterElementalSprite.class;
+        spriteClass = GreaterWaterElementalSprite.class;
 
         HP = HT = 1;//for now
         defenseSkill = 1;//

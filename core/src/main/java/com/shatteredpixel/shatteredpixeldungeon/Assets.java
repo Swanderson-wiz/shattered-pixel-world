@@ -349,6 +349,8 @@ public class Assets {
 		public static final String SPRIGGAN 		= "sprites/spriggan.png";
 		public static final String SPECTRAL_KNIGHT  = "sprites/spectral_knight.png";
 		public static final String TRAINING_DUMMY   = "sprites/training_dummy.png";
-		public static final String GREATER_ELEMENTAL= "sprites/greater_elemental.png";
+		public static final String GREATER_FIRE 	= "sprites/greater_fire_elemental.png";
+		public static final String GREATER_EARTH 	= "sprites/greater_earth_elemental.png";
+		public static final String GREATER_WATER 	= "sprites/greater_water_elemental.png";
 	}
 }

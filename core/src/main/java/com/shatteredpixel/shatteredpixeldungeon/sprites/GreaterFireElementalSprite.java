@@ -3,12 +3,12 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
 
-public class GreaterElementalSprite extends MobSprite{
+public class GreaterFireElementalSprite extends MobSprite{
 
-    public GreaterElementalSprite() {
+    public GreaterFireElementalSprite() {
         super();
 
-        texture(Assets.Sprites.GREATER_ELEMENTAL);
+        texture(Assets.Sprites.GREATER_FIRE);
 
         TextureFilm frames = new TextureFilm( texture, 14, 16 );
 
