@@ -75,7 +75,7 @@ public class MobSpawner extends Actor {
 			case 1: default:
 				//3x rat, 1x snake
 				return new ArrayList<>(Arrays.asList(
-						GreaterElemental.class, TrainingDummy.class
+						Wolf.class, Wolf.class
 						//Rat.class, Rat.class, Goblin.class,
 						//Snake.class
 				));

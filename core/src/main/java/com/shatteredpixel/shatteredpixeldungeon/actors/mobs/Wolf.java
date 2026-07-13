@@ -1,18 +1,17 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterFireElementalSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterWaterElementalSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GreaterEarthElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.WolfSprite;
 import com.watabou.utils.Random;
 
-public class GreaterElemental extends Mob{
+public class Wolf extends Mob {
 
     {
-        spriteClass = GreaterEarthElementalSprite.class;
+        spriteClass = WolfSprite.class;
 
         HP = HT = 1;//for now
         defenseSkill = 1;//
+        baseSpeed = 2f;
 
         EXP = 1;
         maxLvl = 1;
