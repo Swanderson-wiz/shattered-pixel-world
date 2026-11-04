@@ -354,5 +354,6 @@ public class Assets {
 		public static final String GREATER_WATER 	= "sprites/greater_water_elemental.png";
 		public static final String WRATH_DEMON 		= "sprites/wrath_demon.png";
 		public static final String WOLF 			= "sprites/wolf.png";
+		public static final String ZOMBIE 			= "sprites/zombie.png";
 	}
 }
