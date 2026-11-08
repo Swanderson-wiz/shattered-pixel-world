@@ -1,6 +1,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.watabou.noosa.TextureFilm;
 
 public class WrathDemonSprite extends MobSprite {
@@ -21,9 +24,17 @@ public class WrathDemonSprite extends MobSprite {
         attack = new Animation( 12, false );
         attack.frames( frames, 8, 9, 10 );
 
-        die = idle.clone();
+        die = new Animation( 10, false );
+        die.frames( frames, 11 );
 
         play( idle );
 
+    }
+
+    @Override
+    public void die() {
+        super.die();
+        emitter().burst( ElmoParticle.FACTORY , 10 );
+        emitter().burst( ShadowParticle.UP, 8 );
     }
 }
