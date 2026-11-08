@@ -34,6 +34,7 @@ public abstract class Lich extends Mob{
         maxLvl = 30;
 
         properties.add(Property.UNDEAD);
+        properties.add(Property.MINIBOSS);
 
         HUNTING = new Hunting();
     }
