@@ -5,6 +5,8 @@ import com.watabou.noosa.TextureFilm;
 
 public class ZombieSprite extends MobSprite {
 
+    private Animation crumple;
+
     public ZombieSprite() {
         super();
 
@@ -24,6 +26,31 @@ public class ZombieSprite extends MobSprite {
         die = new Animation( 8, false );
         die.frames( frames, 11, 12, 13, 14 );
 
+        crumple = new Animation( 8, false );
+        crumple.frames( frames, 0, 15, 16, 17 );
+
         play( idle );
     }
+
+    public void crumple(){
+        hideEmo();
+        processStateRemoval(State.PARALYSED);
+        play(crumple);
+    }
+
+    public void endCrumple(){
+        if (curAnim == crumple){
+            idle();
+        }
+    }
+
+    @Override
+    public void die() {
+        if (curAnim == crumple){
+            //causes the sprite to not rise then fall again when dieing.
+            die.frames[0] = die.frames[1] = die.frames[2] = die.frames[3];
+        }
+        super.die();
+    }
+
 }
