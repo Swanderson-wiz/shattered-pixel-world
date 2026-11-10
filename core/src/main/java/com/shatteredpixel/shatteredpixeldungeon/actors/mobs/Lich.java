@@ -520,7 +520,6 @@ public abstract class Lich extends Mob{
             HT = 125;
             HP = 100;
 
-            properties.add(Property.LARGE);
         }
 
         @Override
@@ -530,6 +529,15 @@ public abstract class Lich extends Mob{
 
         @Override
         public int damageRoll() { return Random.NormalIntRange( 30, 35 ); }
+
+        @Override
+        public float speed() {
+            //Since the lich can summon them, can't just make it large, just slow through gaps.
+            if (!Dungeon.level.openSpace[pos]) {
+                return Math.max(0.25f, super.speed() / 4f);
+            }
+            return super.speed();
+        }
 
         public static class LichAbominationSprite extends SkeletalAbominationSprite {
 

@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletalAbominationSprite;
 import com.watabou.utils.Random;
@@ -23,7 +24,6 @@ public class SkeletalAbomination extends Skeleton {
 
         lootChance = 0;
 
-        properties.add(Property.LARGE);
     }
 
     //@Override
@@ -31,6 +31,15 @@ public class SkeletalAbomination extends Skeleton {
 
     @Override
     public int attackSkill( Char target ) { return 20; }
+
+    @Override
+    public float speed() {
+        //Since the lich can summon them, can't just make it large, just slow through gaps.
+        if (!Dungeon.level.openSpace[pos]) {
+            return Math.max(0.25f, super.speed() / 4f);
+        }
+        return super.speed();
+    }
 
     @Override
     public void die( Object cause ) {
