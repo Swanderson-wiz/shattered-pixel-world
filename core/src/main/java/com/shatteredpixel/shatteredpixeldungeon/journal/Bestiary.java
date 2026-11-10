@@ -26,71 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.Pow
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.ShadowClone;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.SmokeBomb;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Acidic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Albino;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.ArmoredBrute;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.ArmoredStatue;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bandit;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Brute;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CausticSlime;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalGuardian;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalMimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalSpire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalWisp;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM100;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM200;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM201;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM300;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DemonSpawner;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.EbonyMimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FetidRat;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Gnoll;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollExile;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollSapper;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollTrickster;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GreatCrab;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Guard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.HermitCrab;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.PhantomPiranha;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Pylon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotHeart;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotLasher;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Senior;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shaman;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Skeleton;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Slime;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.SpectralNecromancer;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Spinner;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Swarm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TormentedSpirit;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -163,6 +99,9 @@ import java.util.LinkedHashMap;
 //contains all the game's various entities, mostly enemies, NPCS, and allies, but also traps and plants
 public enum Bestiary {
 
+	BEASTS,
+	DEMONIC,
+	UNDEAD,
 	REGIONAL,
 	BOSSES,
 	UNIVERSAL,
@@ -181,7 +120,7 @@ public enum Bestiary {
 	//should only be used when initializing
 	private void addEntities(Class<?>... classes ){
 		for (Class<?> cls : classes){
-			seen.put(cls, false);
+			seen.put(cls, true);//FIXME DON'T FORGET TO CHANGE THIS BACK TO FALSE LATER
 			encounterCount.put(cls, 0);
 		}
 	}
@@ -207,6 +146,19 @@ public enum Bestiary {
 	}
 
 	static {
+
+		BEASTS.addEntities( Rat.class, Albino.class, FetidRat.class, Snake.class, Swarm.class, Bee.class, Spinner.class,
+				Crab.class, HermitCrab.class, GreatCrab.class, Bat.class, Piranha.class, PhantomPiranha.class,
+				Wolf.class
+				);
+
+		DEMONIC.addEntities( FetidRat.class, Succubus.class, WrathDemon.class );
+
+		UNDEAD.addEntities( Thief.class, Guard.class, Necromancer.class, SpectralNecromancer.class,
+				SkeletonSwarmling.class, Skeleton.class, SkeletalAbomination.class,
+				Lich.GreenLich.class, Lich.BlueLich.class, Lich.PurpleLich.class,
+				Zombie.class, SpectralKnight.class, Wraith.class, TormentedSpirit.class,
+				Ghoul.class, Warlock.class, Monk.class, Senior.class, DwarfKing.class);
 
 		REGIONAL.addEntities(Rat.class, Snake.class, Gnoll.class, Swarm.class, Crab.class, Slime.class,
 				Skeleton.class, Thief.class, DM100.class, Guard.class, Necromancer.class,
@@ -262,6 +214,10 @@ public enum Bestiary {
 		classConversions.put(CorpseDust.DustWraith.class,      Wraith.class);
 
 		classConversions.put(Necromancer.NecroSkeleton.class,  Skeleton.class);
+
+		classConversions.put(Lich.LichSkeleton.class, Skeleton.class);
+		classConversions.put(Lich.LichAbomination.class, SkeletalAbomination.class);
+		classConversions.put(Lich.LichSwarmling.class, SkeletonSwarmling.class);
 
 		classConversions.put(TenguDartTrap.class,              PoisonDartTrap.class);
 		classConversions.put(GnollRockfallTrap.class,          RockfallTrap.class);
