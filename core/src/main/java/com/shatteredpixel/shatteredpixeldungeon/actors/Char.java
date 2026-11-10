@@ -1366,6 +1366,7 @@ public abstract class Char extends Actor {
 		MINIBOSS ( new HashSet<Class>(),
 				new HashSet<Class>( Arrays.asList(AllyBuff.class, Dread.class) )),
 		BOSS_MINION,
+		BEAST,
 		UNDEAD,
 		DEMONIC,
 		INORGANIC ( new HashSet<Class>(),

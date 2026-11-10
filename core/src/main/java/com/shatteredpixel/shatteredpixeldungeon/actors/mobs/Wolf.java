@@ -16,6 +16,8 @@ public class Wolf extends Mob {
         EXP = 1;
         maxLvl = 1;
 
+        properties.add( Property.BEAST );
+
     }
 
     @Override

@@ -37,6 +37,9 @@ public class Rat extends Mob {
 		defenseSkill = 2;
 
 		maxLvl = 5;
+
+		properties.add( Property.BEAST );
+
 	}
 
 	@Override

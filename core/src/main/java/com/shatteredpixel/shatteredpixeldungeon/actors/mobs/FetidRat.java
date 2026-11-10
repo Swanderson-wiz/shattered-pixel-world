@@ -47,8 +47,8 @@ public class FetidRat extends Rat {
 		WANDERING = new Wandering();
 		state = WANDERING;
 
-		properties.add(Property.MINIBOSS);
 		properties.add(Property.DEMONIC);
+		properties.add(Property.MINIBOSS);
 	}
 
 	@Override

@@ -43,6 +43,9 @@ public class Snake extends Mob {
 		
 		loot = Generator.Category.SEED;
 		lootChance = 0.25f;
+
+		properties.add( Property.BEAST );
+
 	}
 	
 	@Override

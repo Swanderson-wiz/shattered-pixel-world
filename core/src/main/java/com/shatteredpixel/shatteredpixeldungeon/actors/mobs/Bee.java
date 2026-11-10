@@ -48,6 +48,9 @@ public class Bee extends Mob {
 		
 		//only applicable when the bee is charmed with elixir of honeyed healing
 		intelligentAlly = true;
+
+		properties.add( Property.BEAST );
+
 	}
 
 	private int level;
